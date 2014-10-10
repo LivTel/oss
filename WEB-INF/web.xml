@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+  <servlet>
+    <servlet-name>oss_servlet</servlet-name>
+    <servlet-class>org.jibx.soap.server.SOAPServlet</servlet-class>
+    <!--  service names in ngat.oss.reference.Const -->
+     <init-param>
+      <param-name>status-service</param-name>
+      <param-value>config-status-service.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>phase2-service</param-name>
+      <param-value>config-phase2-service.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>access-service</param-name>
+      <param-value>config-access-service.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>gatekeeper-service</param-name>
+      <param-value>config-gatekeeper-service.xml</param-value>
+    </init-param>
+    <!-- account services -->
+    <init-param>
+      <param-name>proposal-account-service</param-name>
+      <param-value>config-proposal-account-service.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>tag-account-service</param-name>
+      <param-value>config-tag-account-service.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>history-service</param-name>
+      <param-value>config-history-service.xml</param-value>
+    </init-param>
+  </servlet>
+ 
+  <listener>
+    <listener-class>ngat.oss.servlet.OssContextListener</listener-class>
+  </listener>
+
+  <servlet-mapping>
+    <servlet-name>oss_servlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+  <welcome-file-list id="WelcomeFileList">
+	<welcome-file>launch.jsp</welcome-file>
+  </welcome-file-list>
+	
+</web-app>
+

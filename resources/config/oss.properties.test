@@ -1,0 +1,21 @@
+# This file exists as /oss/oss/config/oss.properties
+# on the machine running the oss rmi objects and database connections
+
+accessmodel.rmi.objectname=AccessModel
+proposalaccountmodel.rmi.objectname=ProposalAccountModel
+tagaccountmodel.rmi.objectname=TagAccountModel
+historymodel.rmi.objectname=HistoryModel
+lockingmodel.rmi.objectname=LockingModel
+phase2model.rmi.objectname=Phase2Model
+
+accessmodel.rmi.port=1100
+proposalaccountmodel.rmi.port=1101
+tagaccountmodel.rmi.port=1102
+historymodel.rmi.port=1103
+lockingmodel.rmi.port=1104
+phase2model.rmi.port=1105
+
+database.host=ltdev1
+database.db=phase2odb
+database.user=oss
+database.password=ng@toss

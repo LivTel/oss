@@ -1,0 +1,7 @@
+<service name="tag-account-service">
+  <!-- write a schema in order to have wsdl available -->
+  <!-- <schema>Phase2Schema.xsd</schema> -->
+  <!-- <wsdl-uri>http://ngat.phase2.com/wsdl</wsdl-uri>  -->
+  <handler-class>ngat.oss.handler.TagAccountRequestHandler</handler-class>
+  <operation method="handleRequest"/>
+</service>

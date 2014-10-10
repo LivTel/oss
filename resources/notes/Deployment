@@ -1,0 +1,45 @@
+Full occ deploy and startup
+-----------------------
+
+If mysql is not running: 
+	
+	On ltdev1 as root
+	~]$ /usr/local/mysql/bin/mysqld_safe&
+
+	... to use it
+	mysql -u root -p
+		appletart99ax
+		
+On nrc-shuttle as nrc
+
+scp /home/dev/bin/javalib/ngat_new_oss.jar eng@ltdev1:/occ/common/experimental
+
+	If changes made to ngat_new_phase2.jar
+	scp /home/dev/bin/javalib/ngat_new_phase2.jar eng@ltdev1:/occ/common/experimental
+	
+scp /home/dev/bin/javalib/ngat_new_oss.war root@ltdev2:/usr/local/tomcat/webapps
+	
+	... should deploy the webapp, if not
+	On ltdev2 as root
+	~]$ /etc/rc.d/init.d/tomcat stop
+	~]$ ps -ef | grep tomcat
+	~]$ kill -9 X
+	~]$ /etc/rc.d/init.d/tomcat start
+	~]$ tail -f /usr/local/tomcat/logs/catalina.out
+	
+	
+If launch is running: 
+
+	On ltdev1 as occ
+	~]$ Ctrl-C the launch process
+
+on ltdev1 as occ
+
+	If launch is running: 
+	~]$ Ctrl-C the launch process
+	
+~]$ cd /occ/bin
+~]$ ./rmistart&
+~]$ ./launch
+
+

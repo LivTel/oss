@@ -1,0 +1,323 @@
+backup: 
+#!/bin/csh
+
+source /opt/ngat/etc/cshrc
+
+if (${#argv} < 1) then
+    echo "Usage: backup <file>"
+    exit 1
+endif
+
+
+set dd = `date -u "+%Y%m%d"`
+
+set BB = ${DEPLOY_HOME}/backup
+
+if (! -e $BB) then
+
+   mkdir $BB
+
+endif
+
+
+set bd = ${BB}/$dd
+
+if (! -e $bd) then
+
+   mkdir $bd
+
+endif
+
+if (! -e $1) then
+   echo "File: $1 does not exist"
+   exit 2
+endif
+
+
+cp $1 $bd
+
+
+
+
+
+
+
+
+
+class_setup: 
+#!/bin/csh
+
+# ---------------------
+# Setup main classpath.
+# ---------------------
+
+
+setenv CLASSPATH .
+
+foreach file (${NGAT_HOME}/*.jar)
+    setenv CLASSPATH ${CLASSPATH}:$file
+#    echo "Add $file"
+end
+
+foreach file (${SHARED_HOME}/*.jar)
+    setenv CLASSPATH ${CLASSPATH}:$file
+#    echo "Add $file"
+end
+ 
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:$LIB_HOME
+
+
+
+
+
+
+
+
+
+
+
+
+oss:
+#!/bin/csh
+
+source /opt/ngat/etc/cshrc
+
+source $DEPLOY_BIN/class_setup
+source $DEPLOY_BIN/x_setup
+
+echo CLASSPATH=$CLASSPATH
+
+
+set P2_CONSOLE_LOG_FILE = ${DEPLOY_TMP}/phase2.log
+    
+# log limit 25MB x 5 files
+/opt/ngat/etc/log_roll $P2_CONSOLE_LOG_FILE 25000000 4
+
+set IN = $1 
+set PID = ${DEPLOY_TMP}/oss.pid
+
+
+switch ($IN)
+    #
+    # STOP
+    #
+    case stop:
+
+    	 echo "Observer Support System stopping"  >>& $P2_CONSOLE_LOG_FILE
+	 
+	 if (! -e $PID) then
+	     echo "Cannot locate a PID file: $PID "  >>& $P2_CONSOLE_LOG_FILE
+	         exit 1
+		 endif
+		 set AID = `cat $PID` 
+    
+    if ($AID == "") then
+        echo "$PID does not contain a valid PID for the OSS" >>& $P2_CONSOLE_LOG_FILE
+	    exit 2
+	    endif
+
+	    set BID = `ps -ef | grep $AID | awk '{if ($3 == '$AID') print $2}'`
+
+	    kill -9 $AID  
+
+	    kill -9 $BID
+
+	    rm -f $PID
+
+	    exit 0
+
+    breaksw
+    #
+    # START. Used by /sbin/init during bootup start.
+    #
+    case "start":
+    echo "Observer Support System starting"  >>&  $P2_CONSOLE_LOG_FILE
+  
+  echo "writing PID" >>& $P2_CONSOLE_LOG_FILE
+  echo $$ > $PID
+  echo "Wrote PID "  >>& $P2_CONSOLE_LOG_FILE
+
+  set tstamp = `date -u "+%Y%m%d%H%M"`
+  set dumpfile = ${DEPLOY_TMP}/phase2_${tstamp}.sql
+  /usr/local/mysql/bin/mysqldump -u oss -png@toss phase2odb >& $dumpfile
+
+  echo "zipping the archived logs" >>& $P2_CONSOLE_LOG_FILE
+  /bin/gzip $dumpfile
+  echo "zipping completed" >>& $P2_CONSOLE_LOG_FILE
+
+
+  # purge any microlensing groups wot have expired
+  #echo "purging any microlensing expired groups"  >>& $P2_CONSOLE_LOG_FILE
+  # uncomment next line to allow purging of microlensing rtml groups
+  # /usr/local/mysql/bin/mysql  -u oss -png@toss phase2odb <  ${DEPLOY_BIN}/deactivate_microlensing_expired_groups.sql
+
+  set IPV4 = "-Djava.net.preferIPv4Stack=true"
+  set POLICY = "-Djava.security.policy=/oss/tmp/policy.dat"
+
+  set CODEBASE = "-Djava.rmi.server.codebase=file:///oss/common/ngat/ file:///oss/common/experimental"
+  
+  # Incase the machine doesnt know its own name
+  set JRS = "-Djava.rmi.server.hostname=oss.lt.com"
+
+  echo "Ready to run...using $JAVA "
+
+  $JAVA -DP2MODEL -Xmx1024m $IPV4 $POLICY $JRS ngat.oss.impl.mysql.ModelRMILauncher 
+        #>>&! $P2_CONSOLE_LOG_FILE  &
+
+	set mexit = $status
+	echo "OSS Process exited with status $mexit "
+
+	/bin/rm -f $PID
+
+	exit 0
+
+        breaksw
+    default:
+    echo " $IN  ? - what the bejabbers does that mean ?"
+    breaksw
+   
+endsw
+
+
+
+
+
+oss_init: 
+#!/bin/sh
+
+# ---------------------------------------------------
+# Init Launcher for: Phase2/OSS Launcher
+# ---------------------------------------------------
+
+. /opt/ngat/etc/bashrc
+
+DAT=`date -u +"%j"`
+OSS_CONSOLE_LOG_FILE=${DEPLOY_TMP}/phase2.log
+
+# Source function library.
+/etc/rc.d/init.d/functions
+
+case "$1" in
+  start)
+  echo "Starting OSS Watchdog. "
+  echo "Logging to: " ${OSS_CONSOLE_LOG_FILE}
+  ${DEPLOY_BIN}/oss start $DEPLOY_SYSTEM  1>> ${OSS_CONSOLE_LOG_FILE} 2>&1 & 
+  ;;
+  stop)
+  echo "Shutting down OSS Watchdog."
+  ${DEPLOY_BIN}/oss stop $DEPLOY_SYSTEM 1>> ${OSS_CONSOLE_LOG_FILE}_stop 2>&1 &     
+  ;;
+  restart)
+  $0 stop
+  echo "Restarting in 10 secs" 
+  sleep 10
+  $0 start
+  ;;
+  *)
+  echo "Usage: $0 {start|stop|restart}"
+  exit 1
+esac
+
+exit 0
+
+
+
+
+
+
+
+
+
+
+phase2_backup:
+#!/bin/csh
+
+foreach file (/oss/tmp/phase2_*.sql.gz)
+    scp $file eng@sdbserver:/sdb/LT/phase2/
+
+    if ($status == 0) then
+    /bin/mv -f $file /oss/tmp/phase2_backed_up/
+    endif
+end
+
+
+
+
+
+phase2_log_backup: 
+#!/bin/csh
+
+set dateday = `date -u "+%Y%m%d"`
+scp /oss/tmp/phase2.log eng@sdbserver:/sdb/LT/oss_logs/phase2.log.$dateday
+
+
+
+
+
+rmi:
+#!/bin/csh
+
+source /opt/ngat/etc/cshrc
+
+source $DEPLOY_BIN/class_setup
+source $DEPLOY_BIN/x_setup
+
+echo Classpath = $CLASSPATH
+
+${JAVA_HOME}/bin/rmiregistry&
+
+
+
+
+rmi_init: 
+#!/bin/sh
+
+# -----------------------------------------------
+# Init launcher for: RMI.
+# -----------------------------------------------
+
+. /opt/ngat/etc/bashrc
+
+# Source function library.
+/etc/rc.d/init.d/functions
+
+DAT=`date -u +"%j_%H_%M"`
+
+case "$1" in
+  start)
+  echo "Starting RMIREG"
+  $DEPLOY_BIN/rmi start  1> $DEPLOY_TMP/rmilog 2>&1 &
+  ;;
+  stop)
+  echo "Shutting down RMIREG"
+  $DEPLOY_BIN/rmi stop  1> $DEPLOY_TMP/rmilog 2>&1 
+  ;;
+  restart)
+  $0 stop	
+  echo "Restarting in 30 secs"
+  sleep 30
+  $0 start
+  ;;
+  *)
+  echo "Usage: $0 {start | stop | restart}"
+  exit 1
+esac
+
+exit 0
+
+
+
+
+x_setup: 
+#!/bin/csh
+
+# -----------------------------
+# Setup experimental classpath.
+# -----------------------------
+
+foreach file (${COMMON_HOME}/experimental/*.jar)
+    setenv CLASSPATH ${file}:${CLASSPATH}
+#   echo "Add $file"
+end
+
+

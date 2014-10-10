@@ -1,0 +1,4 @@
+<service name="status-service">
+  <handler-class>ngat.oss.handler.StatusRequestHandler</handler-class>
+  <operation method="handleRequest"/>
+</service>

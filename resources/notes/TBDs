@@ -1,0 +1,49 @@
+Decisions:
+----------
+Do we want instrument configs as programme entities.
+Do we want Proposals to have active / inactive flags
+Accounting - Dark / Bright time interrogation.
+
+
+Statements and requirements:
+----------------------------
+Proposal is one of this semesters instantiations of a programme.
+Migration note: Initially one Semester for TAG with all values, and seperate programme for each proposal.
+Targets (within observation sequences) are essentially imprints from the target in the programme. If the programme target is edited,
+  the target in the observation sequence is not changed. However we need to provide the option to change those when an edit of the programme
+  target occurs.
+
+
+TBD list
+--------
+1. Solve the transport problem : org.xmlpull.mxp1.MXParser.fillBuf(MXParser.java:3000) - DONE
+2. Change the Models and dao objects to reflect the new phase2 (etc) design. - DONE
+3. User mapping file from Rob - implement user mapping at migrator run. - DONE
+4. Use Steve's code to migrate current obs into new form on database. - DONE
+5. Start to implement a read only system, with migrator run as a batch job daily.
+6. Accounting model - implement simple model (i.e. awarded / used)
+7. Access model - ignore at the moment. Simply use User - mapped to Proposal.
+8. Locking model - write everything as locked for read only.
+
+
+Other stuff:
+------------
+
+Some thoughts on interface into archive and how it relates to the phase2 etc.
+-----------------------------------------------------------------------------
+archive info record:
+
+ID : primary key, a unique record ID.
+filename: the name of the image file. (maybe split by parts e.g. scope/instr/std/mult_no).
+histID : foreign key, reference to the group execution history item during which the image was taken.
+obsID : foreign key, reference to the observation for which the image was made.
+checked : indicates if image has been quality checked.
+checker : who checked it;
+check_time : when they checked it.
+check_info : was it OK, plus various fields to indicate why not.
+- check_brightness, check_dfocus, check_streaked etc, or maybe more quantative details.
+payback : either an indication or a foreign key ref to an accounting transaction detailing the payback, 
+as several images could be involved in a single payback transaction.
+
+
+

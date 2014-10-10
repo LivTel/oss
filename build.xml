@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+
+<project name="Oss" default="war" basedir=".">
+
+	<description>"Oss Webservice Infrastructure"</description>
+
+	<!-- The directories -->
+	<property name="root-dir" value="/home/dev/nrc_workspace/ngat_oss" />
+	<property name="class-dir" value="${root-dir}/WEB-INF/bin" />
+	<property name="lib-dir" value="${root-dir}/WEB-INF/lib" />
+	<property name="deploy-dir" value="/home/dev/bin/javalib"/>
+	<property name="third-party-lib-dir" value="/home/dev/bin/javalib_third_party" />
+	<property name="ngat-oss-client-root" value="/home/dev/nrc_workspace/ngat_oss_client" />
+	<!-- new directory, in order for ant build to access the servlet-api jar -->
+	<property name="catalina-home" value="/usr/local/tomcat/" />
+	
+	<!-- other definitions -->
+
+	<property name="war-name" value="ngat_new_oss"/>
+	<property name="jar-name" value="ngat_new_oss"/>
+
+	<!-- Cleanup -->
+
+	<target name="clean" description="Clean out dross">
+		<delete verbose="true">
+			<fileset dir="." includes="**/*~" defaultexcludes="false" />
+		</delete>
+	</target>
+
+	<!-- Prepare build directories -->
+
+	<target name="prepare" description="Prepare build directories">
+		
+		<echo message="Building: Oss Webservice Infrastructure"/>
+		
+		<tstamp>
+			<format property="BUILD" pattern="yyyyMMdd_HHmm" locale="en" />
+		</tstamp>
+		<echo message="Build date: ${BUILD}" />
+		
+		<!-- build the sub project jars -->
+		<!-- build phase2 objects jar-->
+		<echo message="building sub project target ngat_new_phase2.jar"/>
+		<subant target="jar" buildpath="/home/dev/src/phase2/java/build.xml"/>
+		
+		<!-- copy phase2 objects jar to lib dir of this application-->
+		<echo message="copying ${deploy-dir}/ngat_new_phase2.jar to ${lib-dir}"/>
+		<copy file="${deploy-dir}/ngat_new_phase2.jar" todir="${lib-dir}" overwrite="true"/>
+		
+		<!-- copy phase2 objects jar to lib dir of oss client application-->
+		<echo message="copying ${deploy-dir}/ngat_new_phase2.jar to ${ngat-oss-client-root}/lib"/>
+		<copy file="${deploy-dir}/ngat_new_phase2.jar" todir="${ngat-oss-client-root}/lib" overwrite="true"/>
+		
+		<!-- build oss client jar-->
+		<echo message="building sub project target ngat_new_oss_client.jar"/>
+		<subant target="jar" buildpath="/home/dev/nrc_workspace/ngat_oss_client/build.xml"/>
+		
+		<!-- copy oss client jar to lib dir of this application-->
+		<echo message="copying ${deploy-dir}/ngat_new_oss_client.jar to ${lib-dir}"/>
+		<copy file="${deploy-dir}/ngat_new_oss_client.jar" todir="${lib-dir}" overwrite="true"/>
+
+		<!-- copy sms jar into lib directory of this application -->
+		<echo message="copying ${deploy-dir}/ngat_sms.jar to ${lib-dir}"/>
+		<copy file="${deploy-dir}/ngat_sms.jar" todir="${lib-dir}" overwrite="true"/>
+		
+		<!-- copy tcm jar into lib directory of this application (3/6/14) -->
+		<echo message="copying ${deploy-dir}/ngat_new_tcm.jar to ${lib-dir}"/>
+		<copy file="${deploy-dir}/ngat_new_tcm.jar" todir="${lib-dir}" overwrite="true"/>
+		
+		<!-- copy third party jars into lib directory of this application -->
+
+		<copy file="${third-party-lib-dir}/jibx/jibx-extras.jar" todir="${lib-dir}" overwrite="true"/>
+		<copy file="${third-party-lib-dir}/jibx/jibx-run.jar" todir="${lib-dir}" overwrite="true"/>
+		
+		<copy file="${third-party-lib-dir}/jibx/xpp3.jar" todir="${lib-dir}" overwrite="true"/>
+		
+		<copy file="${third-party-lib-dir}/jibx_soap/jibx-soap.jar" todir="${lib-dir}" overwrite="true"/>
+		<copy file="${third-party-lib-dir}/log4j-1.2.13.jar" todir="${lib-dir}" overwrite="true"/>
+		
+		<!-- copy in house jars into lib directory of this application -->
+		
+		<copy file="${deploy-dir}/ngat_util.jar" todir="${lib-dir}" overwrite="true"/>
+
+	</target>
+
+	<!-- Compile all sources -->
+
+	<target name="javac" depends="prepare" description="Compile sources">
+		<!-- pre, 19/8/13 was this: -->
+		<!--
+		<javac srcdir="." 
+			destdir="${class-dir}" 
+			debug="on">
+	-->
+		<!--- 
+			//commented out on 14/5/14 - trying to use more recent java versions
+			<javac srcdir="." 
+			destdir="${class-dir}" 
+			debug="on" 
+			source="1.5" 
+			target="1.5"
+			includeantruntime="false"
+			bootclasspath="/usr/java/jdk1.5.0_15/jre/lib/rt.jar">  
+		-->
+		<!-- rolling back to java 1.5
+		<javac srcdir="." 
+			destdir="${class-dir}" 
+			debug="on">
+			-->
+		<javac srcdir="." 
+					destdir="${class-dir}" 
+					debug="on"
+					source="1.5" 
+					target="1.5">
+			<classpath>
+				<pathelement path="${classpath}" />
+				<fileset dir="${lib-dir}">
+					<include name="*.jar" />
+					<exclude name="${jar-name}.jar" />
+				</fileset>
+				<!--- added to path to allow build to compile against servlet-api (this is now used for some context watching) -->
+				<fileset dir="${catalina-home}/lib">
+					<include name="servlet-api.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+
+	<!-- Generate RMI stubs and skeletons -->
+
+	<target name="rmic" depends="javac" description="Generate RMI stubs">
+		<rmic debug="true" base="${class-dir}"
+			includes=
+		   "ngat/oss/impl/mysql/model/AccessModel.class,
+			ngat/oss/impl/mysql/model/AccountModel.class,
+			ngat/oss/impl/mysql/model/HistoryModel.class,
+			ngat/oss/impl/mysql/model/LockingModel.class,
+			ngat/oss/impl/mysql/model/Phase2Model.class" 
+			stubversion="1.2">
+
+			<classpath>
+				<pathelement path="${classpath}" />
+				<fileset dir="${lib-dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</rmic>
+	</target>
+
+
+	<!-- Deploy to JAR with Jibx bindings and rmi stubs included -->
+
+	<target name="jar" depends="rmic" description="Create JAR">
+		<delete file="${deploy-dir}/${jar-name}.jar" quiet="true"/>
+		
+		<echo message="Build number: ${BUILD}" />
+		<echo message="Creating ${deploy-dir}/${jar-name}.jar" />
+		
+		<!-- create jar file in javalib dir -->
+		<jar jarfile="${deploy-dir}/${jar-name}.jar" basedir="${class-dir}" update="false" />
+		
+		<!-- deploy jar to sub-project ngat_oss_client lib dir -->
+		<copy file="${deploy-dir}/${jar-name}.jar" todir="${ngat-oss-client-root}/lib"/>
+		
+		<!-- copy jar to local lib dir (so it's included in the .war) -->
+		<copy file="${deploy-dir}/${jar-name}.jar" todir="${lib-dir}"/>
+	</target>
+
+	<!-- Build the war file for distribution -->
+
+	<target name="war" depends="jar">
+		<!-- delete the old .war file -->
+		<delete file="${deploy-dir}/${war-name}.war" quiet="true"/>
+
+		<!-- create the .war file -->
+		<jar destfile="${deploy-dir}/${war-name}.war" basedir="${root-dir}" update="false">
+			<exclude name="*.nfs*" />
+		</jar>
+		
+		<!-- deploy it to local webserver -->
+		<copy file="${deploy-dir}/${war-name}.war" todir="${catalina-home}/webapps/"/>
+	</target>
+
+</project>

@@ -1,0 +1,40 @@
+package ngat.oss.impl.mysql.util;
+
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.SimpleTimeZone;
+
+import org.apache.log4j.Logger;
+
+public class DateTimeUtil {
+
+	static Logger logger = Logger.getLogger(DateTimeUtil.class);
+	
+	public static Calendar calendar = Calendar.getInstance(Locale.UK);
+	
+	public static final int SQL_DATE=1;
+	public static final int UTIL_DATE=2;
+	
+	public static SimpleTimeZone UTC = new SimpleTimeZone(0, "UTC");
+
+	
+	static {
+		calendar.setTimeZone(UTC);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static java.sql.Date getSqlDateNow() {
+		return new java.sql.Date(calendar.getTime().getTime());
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static  java.util.Date getDateNow() {
+		return new java.util.Date(calendar.getTime().getTime());
+	}
+}

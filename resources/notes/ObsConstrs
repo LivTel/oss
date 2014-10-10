@@ -1,0 +1,100 @@
+
+Database Table Design
+---------------------
+
+CREATE TABLE `OBSERVING_CONSTRAINT` (
+  `id` int NOT NULL auto_increment,
+  `gid` int default NULL,            /** group id **/
+  `type` tinyint default NULL,       /** from ngat.phase2.impl.mysql.reference.ObservingConstraintTypes **/
+  `category` tinyint default NULL,   /** category value, e.g Good, Average, Photometric, Civil Twilight etc **/
+  `min` double default NULL,
+  `max` double default NULL,
+  PRIMARY KEY  (`id`));
+
+TODO: LIST CATEGORY VALUE LOCATIONS, AND STANDARDISE.
+
+
+Seeing
+------
+4 Categories: Good, Average, Poor, Unconstrained
+Need to hook scheduler into these.
+
+(category field)
+
+
+Extinction
+----------
+Unit is magnitude.
+Two categories: Photometric and Non-photometric.
+If Non-photometric offer mag's of extinction.
+
+(category, max fields)
+
+
+Airmass
+-------
+Elevation, number in the range 1 to 3 (double)
+Default to 2.
+
+(max field)
+
+
+Hour Angle
+----------
+Two degree ranges: Before Transit (-12 to 0) degrees, and After Transit (0 to +12) degrees
+Measure is > HH:MM:SS
+Default to -12:00:00 and +12:00:00
+
+(min, max fields)
+
+Solar Elevation
+---------------
+Measured in degrees (of Sun below horizon).
+Categories as follows:
+	00 - 06 Civil Twilight
+	06 - 12 Nautical Twilight
+	12 - 18 Astronomical Twilight
+	18	Night time 
+
+(category field)
+
+
+Sky Brightness
+--------------
+Two categories: Dark or Bright
+If proposal account is allocated Dark, user can pick: Dark and hence set Lunar Constraints
+Otherwise, Bright is only available choice and Lunar Constraints are not available for editing.
+
+(category field)
+
+
+Lunar Distance
+--------------
+Only available with Sky Brightness constraint set to Dark.
+Measured in degrees 0 - 180 (DDD)
+     
+(min field)
+
+
+Lunar Phase
+-----------
+Only available with Sky Brightness constraint set to Dark.
+Number between 0 and 1 (0.NN)
+
+(max field)
+
+
+Lunar Elevation - RE-DISCUSS, THIS IS SKY BRIGHTNESS REALLY
+---------------
+Only available with Sky Brightness constraint set to Dark.
+Measured in degrees -90 to +90 (SDD)
+
+(max field)
+
+
+Other ideas:
+------------
+Need to display Proposal accounting info on the GUI, also how that time is altered according to user alterations.
+If committed > allocated for Dark Time, then display in Red, etc.
+
+
