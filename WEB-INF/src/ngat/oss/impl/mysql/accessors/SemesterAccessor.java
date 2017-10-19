@@ -45,6 +45,13 @@ public class SemesterAccessor {
 		"SEMESTER " +
 		"where id=?";
 	
+	public static final String FIND_SEMESTER_SQL = 							
+		"select " +
+		"id, name, startDate, endDate " +
+		"from " +
+		"SEMESTER " +
+		"where name=?";
+	
 	public static final String GET_SEMESTER_OF_DATE_SQL = 							
 		"select " +
 		"id, name, startDate, endDate " +
@@ -130,6 +137,30 @@ public class SemesterAccessor {
 			stmt.setLong(1, id);
 			
 			ResultSet resultSet = DatabaseTransactor.getInstance().executeQueryStatement(stmt, GET_SEMESTER_SQL);
+			ISemester semester = null;
+			if (resultSet.next()) {
+				semester = getSemesterFromResultSetCursor(resultSet);			
+			}
+			return semester;
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close PreparedStatement");
+			}
+		}
+	}
+	
+	public ISemester findSemester(Connection connection, String name)  throws Exception {
+		PreparedStatement stmt = null;
+		
+		try {
+			stmt = connection.prepareStatement(FIND_SEMESTER_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, name);
+			
+			ResultSet resultSet = DatabaseTransactor.getInstance().executeQueryStatement(stmt, FIND_SEMESTER_SQL);
 			ISemester semester = null;
 			if (resultSet.next()) {
 				semester = getSemesterFromResultSetCursor(resultSet);			

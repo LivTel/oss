@@ -91,7 +91,7 @@
 		<javac srcdir="." 
 			destdir="${class-dir}" 
 			debug="on">
-	-->
+		-->
 		<!--- 
 			//commented out on 14/5/14 - trying to use more recent java versions
 			<javac srcdir="." 

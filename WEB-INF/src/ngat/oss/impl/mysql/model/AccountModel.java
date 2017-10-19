@@ -397,6 +397,20 @@ public class AccountModel extends UnicastRemoteObject implements IAccountModel, 
 		}
 	}
 	
+	public ISemester findSemester(String name) throws RemoteException {
+
+		Connection connection = null;
+		try {
+			connection = ConnectionPool.getInstance().getConnection();
+			return semesterAccessor.findSemester(connection, name);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RemoteException(e.getClass().getName(), e);
+		} finally {
+			ConnectionPool.getInstance().surrenderConnection(connection);
+		}
+	}
+	
 	//**************************** LISTS *********************************************************//
 
 	public List listSemestersFromDate(long dateTime) throws RemoteException {

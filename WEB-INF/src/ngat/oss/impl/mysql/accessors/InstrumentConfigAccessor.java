@@ -15,6 +15,7 @@ import ngat.oss.impl.mysql.DatabaseTransactor;
 import ngat.oss.impl.mysql.reference.InstrumentConfigTypes;
 import ngat.phase2.IDetectorConfig;
 import ngat.phase2.IInstrumentConfig;
+import ngat.phase2.XBlueTwoSlitSpectrographInstrumentConfig;
 import ngat.phase2.XDualBeamSpectrographInstrumentConfig;
 import ngat.phase2.XFilterDef;
 import ngat.phase2.XFilterSpec;
@@ -22,6 +23,7 @@ import ngat.phase2.XImagerInstrumentConfig;
 import ngat.phase2.XInstrumentConfig;
 import ngat.phase2.XPolarimeterInstrumentConfig;
 import ngat.phase2.XImagingSpectrographInstrumentConfig;
+import ngat.phase2.XSpectrographInstrumentConfig;
 import ngat.phase2.XTipTiltImagerInstrumentConfig;
 
 import org.apache.log4j.Logger;
@@ -107,6 +109,9 @@ public class InstrumentConfigAccessor {
 	public static final String INSERT_INST_CONFIG_IMAGING_SPECTROGRAPH_SQL =						
 		"insert into INST_CONFIG_SPEC_IMAGER (grismPos, grismRot, slitPos) values (?, ?, ?)";
 
+	public static final String INSERT_INST_CONFIG_BLUE_TWO_SLIT_SPECTROGRAPH_SQL =						
+		"insert into INST_CONFIG_SPEC_TWO_SLIT (slitWidth) values (?)";
+	
 	public static final String INSERT_INST_CONFIG_TIP_TILT_SQL =						
 		"insert into INST_CONFIG_TIP_TILT ("+
 		"gain) values (" + 
@@ -122,6 +127,12 @@ public class InstrumentConfigAccessor {
 		"select grismPos, grismRot, slitPos  " +
 		"from " +
 		"INST_CONFIG_SPEC_IMAGER " +
+		"where id=?";
+	
+	public static final String GET_INST_CONFIG_TWO_SLIT_SPECTROGRAPH_SQL = 
+		"select slitWidth  " +
+		"from " +
+		"INST_CONFIG_SPEC_TWO_SLIT " +
 		"where id=?";
 	
 	public static final String GET_INST_CONFIG_POLARIMETER_SQL = 
@@ -172,6 +183,10 @@ public class InstrumentConfigAccessor {
 				iConfigType = InstrumentConfigTypes.IMAGING_SPECTROGRAPH;
 				XImagingSpectrographInstrumentConfig imagingSpectrographInstrumentConfig = (XImagingSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigImagingSpectrograph(connection, imagingSpectrographInstrumentConfig);
+			} else if (instConfig instanceof XBlueTwoSlitSpectrographInstrumentConfig) {
+				iConfigType = InstrumentConfigTypes.TWO_SLIT_SPECTROGRAPH;
+				XBlueTwoSlitSpectrographInstrumentConfig imagingSpectrographInstrumentConfig = (XBlueTwoSlitSpectrographInstrumentConfig)instConfig;
+				iConfigId = insertInstConfigBlueTwoSlitSpectrograph(connection, imagingSpectrographInstrumentConfig);
 			} else if (instConfig instanceof XDualBeamSpectrographInstrumentConfig) {
 				iConfigType = InstrumentConfigTypes.FRODO;
 				XDualBeamSpectrographInstrumentConfig dualBeamSpectrographInstrumentConfig = (XDualBeamSpectrographInstrumentConfig)instConfig;
@@ -264,6 +279,10 @@ public class InstrumentConfigAccessor {
 				iConfigType = InstrumentConfigTypes.IMAGING_SPECTROGRAPH;
 				XImagingSpectrographInstrumentConfig imagingSpectrographInstrumentConfig = (XImagingSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigImagingSpectrograph(connection, imagingSpectrographInstrumentConfig);
+			} else if (instConfig instanceof XBlueTwoSlitSpectrographInstrumentConfig) {
+				iConfigType = InstrumentConfigTypes.TWO_SLIT_SPECTROGRAPH;
+				XBlueTwoSlitSpectrographInstrumentConfig blueTwoSlitSpectrographInstrumentConfig = (XBlueTwoSlitSpectrographInstrumentConfig)instConfig;
+				iConfigId = insertInstConfigBlueTwoSlitSpectrograph(connection, blueTwoSlitSpectrographInstrumentConfig);
 			} else if (instConfig instanceof XDualBeamSpectrographInstrumentConfig) {
 				iConfigType = InstrumentConfigTypes.FRODO;
 				XDualBeamSpectrographInstrumentConfig dualBeamSpectrographInstrumentConfig = (XDualBeamSpectrographInstrumentConfig)instConfig;
@@ -364,7 +383,7 @@ public class InstrumentConfigAccessor {
 		id						= resultSet.getLong(1);
 		pid					= resultSet.getLong(2);
 		dcid					= resultSet.getLong(3);
-		iConfigType		= resultSet.getInt(4);
+		iConfigType	= resultSet.getInt(4);
 		iConfigId			= resultSet.getLong(5);
 		name				= resultSet.getString(6);
 		instrClassName	= resultSet.getString(7);
@@ -390,6 +409,12 @@ public class InstrumentConfigAccessor {
 				return null;
 			}
 			instrumentConfig = (XInstrumentConfig)imagingSpectrographInstrumentConfig;
+		} else if (iConfigType == InstrumentConfigTypes.TWO_SLIT_SPECTROGRAPH) {
+			XBlueTwoSlitSpectrographInstrumentConfig blueTwoSlitSpectrographInstrumentConfig =  getTwoSlitSpectrographInstrumentConfig(connection, iConfigId);
+			if (blueTwoSlitSpectrographInstrumentConfig == null) {
+				return null;
+			}
+			instrumentConfig = (XInstrumentConfig)blueTwoSlitSpectrographInstrumentConfig;
 		} else if (iConfigType == InstrumentConfigTypes.FRODO) {
 			XDualBeamSpectrographInstrumentConfig dualBeamSpectrographInstrumentConfig = getDualBeamSpectrographInstrumentConfig(connection, iConfigId);
 			if (dualBeamSpectrographInstrumentConfig == null) {
@@ -510,6 +535,44 @@ public class InstrumentConfigAccessor {
 		}
 	}
 	
+	private XBlueTwoSlitSpectrographInstrumentConfig getTwoSlitSpectrographInstrumentConfig(Connection connection, long iConfigId) throws Exception {
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(GET_INST_CONFIG_TWO_SLIT_SPECTROGRAPH_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt.setLong(1, iConfigId);
+			
+			resultSet = DatabaseTransactor.getInstance().executeQueryStatement(stmt, GET_INST_CONFIG_TWO_SLIT_SPECTROGRAPH_SQL);
+			if (resultSet == null) { 
+				return null; 
+			}
+			
+			XBlueTwoSlitSpectrographInstrumentConfig blueTwoSlitSpectrographInstrumentConfig = null;
+			if (resultSet.next()) {
+				int slitWidth = resultSet.getInt(1);
+				
+				blueTwoSlitSpectrographInstrumentConfig = new XBlueTwoSlitSpectrographInstrumentConfig();
+				blueTwoSlitSpectrographInstrumentConfig.setSlitWidth(slitWidth);
+			}
+			return blueTwoSlitSpectrographInstrumentConfig;
+		} finally {
+			try {
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close ResultSet");
+			}
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close PreparedStatement");
+			}
+		}
+	}
+
 	private XDualBeamSpectrographInstrumentConfig getDualBeamSpectrographInstrumentConfig(Connection connection, long iConfigId) throws Exception {
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
@@ -657,9 +720,29 @@ public class InstrumentConfigAccessor {
 			stmt.setInt(2, imagingSpectrographInstrumentConfig.getGrismRotation());
 			stmt.setInt(3, imagingSpectrographInstrumentConfig.getSlitPosition());
 			
-			logger.error("!!!!!!!!!!!!!!!! -> " + INSERT_INST_CONFIG_IMAGING_SPECTROGRAPH_SQL);
 			//execute query
 			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_IMAGING_SPECTROGRAPH_SQL, true);
+			return id;
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close PreparedStatement");
+			}
+		}
+	}
+	
+	private long insertInstConfigBlueTwoSlitSpectrograph(Connection connection, XBlueTwoSlitSpectrographInstrumentConfig twoSlitSpectrographInstrumentConfig) throws Exception {
+		
+		PreparedStatement stmt = null;
+		try {
+			stmt = connection.prepareStatement(INSERT_INST_CONFIG_BLUE_TWO_SLIT_SPECTROGRAPH_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt.setInt(1, twoSlitSpectrographInstrumentConfig.getSlitWidth());
+
+			//execute query
+			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_BLUE_TWO_SLIT_SPECTROGRAPH_SQL, true);
 			return id;
 		} finally {
 			try {

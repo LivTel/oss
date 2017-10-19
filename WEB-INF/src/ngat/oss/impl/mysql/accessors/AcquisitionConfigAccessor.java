@@ -29,13 +29,13 @@ public class AcquisitionConfigAccessor  {
 	
 	public static final String INSERT_ACQUISITION_CONFIG_SQL = 		
 		"insert into EA_ACQUISITION_CONFIG (" +
-		"mode, targetInstrument, acquisitionInstrument, allowAlternative, `precision` " + //NB: precision is escaped because it's an SQL reserved word
+		"mode, targetInstrument, acquisitionInstrument, allowAlternative,`precision`" + //NB: precision is escaped because it's an SQL reserved word
 		") values (" +
 		"?, ?, ?, ?,?)";
 	
 	public static final String GET_ACQUISITION_CONFIG_SQL = 							
 		"select " +
-		"mode, targetInstrument, acquisitionInstrument, allowAlternative, `precision`" + //NB: precision is escaped because it's an SQL reserved word
+		"mode, targetInstrument, acquisitionInstrument, allowAlternative,`precision`" + //NB: precision is escaped because it's an SQL reserved word
 		"from " +
 		"EA_ACQUISITION_CONFIG " +
 		"where id=?";
@@ -120,7 +120,7 @@ public class AcquisitionConfigAccessor  {
 					stmt.setString(2, xacquisitionConfig.getTargetInstrumentName());
 					stmt.setString(3, null); //no acquisition instrument
 					stmt.setBoolean(4, false); //don't allow alternative
-					stmt.setInt(5, 0); //precision doesn't matter
+					stmt.setInt(5, IAcquisitionConfig.PRECISION_NOT_SET); //precision doesn't matter
 					break;
 			}
 			//execute query

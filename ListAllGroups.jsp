@@ -12,7 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>LT Fixed-group allocations</title>
 <body>
-<% 	IPhase2Model model = (IPhase2Model)RMIConnectionPool.getInstance().getModel(Const.PHASE2_MODEL_SERVICE);
+<% 	IPhase2Model model = (IPhase2Model)RMIConnectionPool.getInstance().getRemoteServiceObject(Const.PHASE2_MODEL_SERVICE);
 	List programmesList = model.listProgrammes();
 	Iterator progIt = programmesList.iterator();
 	while (progIt.hasNext()) {

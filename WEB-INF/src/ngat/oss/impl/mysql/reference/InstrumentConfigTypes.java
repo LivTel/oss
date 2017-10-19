@@ -24,4 +24,6 @@ public interface InstrumentConfigTypes {
 	/** Instrument config type represented Tip Tilt attributes. */
 	public static final int TIP_TILT = 5;
 	
+	/** Instrument config type represented two-slit spectrograph attributes. */
+	public static final int TWO_SLIT_SPECTROGRAPH = 6;
 }

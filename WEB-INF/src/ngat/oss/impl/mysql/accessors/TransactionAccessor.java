@@ -236,9 +236,9 @@ public class TransactionAccessor {
 		int balanceType;
 		
 		id 					= resultSet.getLong(1);
-		aid				= resultSet.getLong(2);
+		aid					= resultSet.getLong(2);
 		clientRef 		= resultSet.getString(3);
-		time				= resultSet.getLong(4);
+		time					= resultSet.getLong(4);
 		amount			= resultSet.getDouble(5);
 		comment 		= resultSet.getString(6);
 		balanceType	= resultSet.getInt(7);

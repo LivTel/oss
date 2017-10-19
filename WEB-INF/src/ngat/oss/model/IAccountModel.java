@@ -119,6 +119,16 @@ public interface IAccountModel extends Remote {
 	public IAccount findAccount(long ownerId, long semesterId) throws RemoteException;
 	
 	/**
+	 * Returns a semester that adheres to the specified parameters
+	 * @param name
+	 * 				The name of the semester
+	 * @return
+	 * 				The required semester
+	 * @throws RemoteException
+	 */
+	public ISemester findSemester(String name) throws RemoteException;
+		
+	/**
 	 * Returns a transaction with the specified ID
 	 * 
 	 * @param transID
