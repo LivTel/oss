@@ -21,6 +21,7 @@ import ngat.phase2.XFilterDef;
 import ngat.phase2.XFilterSpec;
 import ngat.phase2.XImagerInstrumentConfig;
 import ngat.phase2.XInstrumentConfig;
+import ngat.phase2.XMoptopInstrumentConfig;
 import ngat.phase2.XPolarimeterInstrumentConfig;
 import ngat.phase2.XImagingSpectrographInstrumentConfig;
 import ngat.phase2.XSpectrographInstrumentConfig;
@@ -101,11 +102,16 @@ public class InstrumentConfigAccessor {
 	"resolution) values (" + 
 	"?)";
 	
-	public static final String INSERT_INST_CONFIG_POLARIMETER_SQL =						
-		"insert into INST_CONFIG_POLARIMETER ("+
-		"gain) values (" + 
-		"?)";
+	public static final String INSERT_INST_CONFIG_POLARIMETER_RINGO3_SQL =						
+			"insert into INST_CONFIG_POLARIMETER ("+
+			"gain) values (" + 
+			"?)";
 	
+	public static final String INSERT_INST_CONFIG_MOPTOP_SQL =						
+			"insert into INST_CONFIG_MOPTOP ("+
+			"dichroicState) values (" + 
+			"?)";
+
 	public static final String INSERT_INST_CONFIG_IMAGING_SPECTROGRAPH_SQL =						
 		"insert into INST_CONFIG_SPEC_IMAGER (grismPos, grismRot, slitPos) values (?, ?, ?)";
 
@@ -135,12 +141,18 @@ public class InstrumentConfigAccessor {
 		"INST_CONFIG_SPEC_TWO_SLIT " +
 		"where id=?";
 	
-	public static final String GET_INST_CONFIG_POLARIMETER_SQL = 
+	public static final String GET_INST_CONFIG_POLARIMETER_RINGO3_SQL = 
 		"select gain " +
 		"from " +
 		"INST_CONFIG_POLARIMETER " +
 		"where id=?";
 	
+	public static final String GET_INST_CONFIG_MOPTOP_SQL = 
+			"select dichroicState " +
+			"from " +
+			"INST_CONFIG_MOPTOP " +
+			"where id=?";
+		
 	public static final String GET_INST_CONFIG_FRODO_SQL = 
 		"select resolution " +
 		"from " +
@@ -195,6 +207,10 @@ public class InstrumentConfigAccessor {
 				iConfigType = InstrumentConfigTypes.POLAR;
 				XPolarimeterInstrumentConfig polarimeterInstrumentConfig = (XPolarimeterInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigPolar(connection, polarimeterInstrumentConfig); 
+			} else if (instConfig instanceof XMoptopInstrumentConfig) {
+				iConfigType = InstrumentConfigTypes.MOPTOP;
+				XMoptopInstrumentConfig moptopInstrumentConfig = (XMoptopInstrumentConfig)instConfig;
+				iConfigId = insertInstConfigMoptop(connection, moptopInstrumentConfig); 
 			} else {
 				throw new Phase2Exception("unknown instrument config type: " +(instConfig != null ? instConfig.getClass().getName() : "null") );
 			}
@@ -291,6 +307,10 @@ public class InstrumentConfigAccessor {
 				iConfigType = InstrumentConfigTypes.POLAR;
 				XPolarimeterInstrumentConfig polarimeterInstrumentConfig = (XPolarimeterInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigPolar(connection, polarimeterInstrumentConfig);
+			} else if (instConfig instanceof XMoptopInstrumentConfig) {
+				iConfigType = InstrumentConfigTypes.MOPTOP;
+				XMoptopInstrumentConfig moptopInstrumentConfig = (XMoptopInstrumentConfig)instConfig;
+				iConfigId = insertInstConfigMoptop(connection, moptopInstrumentConfig);
 			} else {
 				throw new Phase2Exception("unknown instrument config type: " +(instConfig != null ? instConfig.getClass().getName() : "null") );
 			}
@@ -380,13 +400,13 @@ public class InstrumentConfigAccessor {
 		int iConfigType;
 		String name, instrClassName;
 	
-		id						= resultSet.getLong(1);
+		id					= resultSet.getLong(1);
 		pid					= resultSet.getLong(2);
-		dcid					= resultSet.getLong(3);
-		iConfigType	= resultSet.getInt(4);
+		dcid				= resultSet.getLong(3);
+		iConfigType			= resultSet.getInt(4);
 		iConfigId			= resultSet.getLong(5);
 		name				= resultSet.getString(6);
-		instrClassName	= resultSet.getString(7);
+		instrClassName		= resultSet.getString(7);
 
 		XInstrumentConfig instrumentConfig = (XInstrumentConfig)getInstrumentConfigFromFields(connection, id, dcid, iConfigType, iConfigId, name, instrClassName);
 		
@@ -427,6 +447,12 @@ public class InstrumentConfigAccessor {
 				return null;
 			}
 			instrumentConfig = (XInstrumentConfig)polarimeterInstrumentConfig;
+		} else if (iConfigType == InstrumentConfigTypes.MOPTOP) {
+			XMoptopInstrumentConfig moptopInstrumentConfig = getMoptopInstrumentConfig(connection, iConfigId);
+			if (moptopInstrumentConfig == null) {
+				return null;
+			}
+			instrumentConfig = (XInstrumentConfig)moptopInstrumentConfig;
 	    } else if (iConfigType == InstrumentConfigTypes.TIP_TILT) {
 			XTipTiltImagerInstrumentConfig tipTiltImagerInstrumentConfig = getTipTiltImagerInstrumentConfig(connection, iConfigId);
 			if (tipTiltImagerInstrumentConfig == null) {
@@ -616,10 +642,10 @@ public class InstrumentConfigAccessor {
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
 		try {
-			stmt = connection.prepareStatement(GET_INST_CONFIG_POLARIMETER_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt = connection.prepareStatement(GET_INST_CONFIG_POLARIMETER_RINGO3_SQL, Statement.RETURN_GENERATED_KEYS);
 			stmt.setLong(1, iConfigId);
 			
-			resultSet = DatabaseTransactor.getInstance().executeQueryStatement(stmt, GET_INST_CONFIG_POLARIMETER_SQL);
+			resultSet = DatabaseTransactor.getInstance().executeQueryStatement(stmt, GET_INST_CONFIG_POLARIMETER_RINGO3_SQL);
 			
 			if (resultSet == null) { 
 				return null; 
@@ -650,6 +676,44 @@ public class InstrumentConfigAccessor {
 		}
 	}
 	
+	private XMoptopInstrumentConfig getMoptopInstrumentConfig(Connection connection, long iConfigId) throws Exception {
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(GET_INST_CONFIG_MOPTOP_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt.setLong(1, iConfigId);
+			
+			resultSet = DatabaseTransactor.getInstance().executeQueryStatement(stmt, GET_INST_CONFIG_MOPTOP_SQL);
+			
+			if (resultSet == null) { 
+				return null; 
+			}
+			
+			XMoptopInstrumentConfig moptopInstrumentConfig = null;
+			if (resultSet.next()) {
+				int dichroicState = resultSet.getInt(1);
+				moptopInstrumentConfig = new XMoptopInstrumentConfig();
+				moptopInstrumentConfig.setDichroicState(dichroicState);
+			}
+			return moptopInstrumentConfig;
+		} finally {
+			try {
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close ResultSet");
+			}
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close PreparedStatement");
+			}
+		}
+	}
+
 	private XTipTiltImagerInstrumentConfig getTipTiltImagerInstrumentConfig(Connection connection, long iConfigId) throws Exception {
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
@@ -778,11 +842,31 @@ public class InstrumentConfigAccessor {
 	private long insertInstConfigPolar(Connection connection, XPolarimeterInstrumentConfig polarimeterInstrumentConfig) throws Exception {
 		PreparedStatement stmt = null;
 		try {
-			stmt = connection.prepareStatement(INSERT_INST_CONFIG_POLARIMETER_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt = connection.prepareStatement(INSERT_INST_CONFIG_POLARIMETER_RINGO3_SQL, Statement.RETURN_GENERATED_KEYS);
 			stmt.setInt(1, polarimeterInstrumentConfig.getGain());
 			
 			//execute query
-			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_POLARIMETER_SQL, true);
+			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_POLARIMETER_RINGO3_SQL, true);
+			return id;
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close PreparedStatement");
+			}
+		}
+	}
+	
+	private long insertInstConfigMoptop(Connection connection, XMoptopInstrumentConfig moptopInstrumentConfig) throws Exception {
+		PreparedStatement stmt = null;
+		try {
+			stmt = connection.prepareStatement(INSERT_INST_CONFIG_MOPTOP_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt.setInt(1, moptopInstrumentConfig.getDichroicState());
+			
+			//execute query
+			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_MOPTOP_SQL, true);
 			return id;
 		} finally {
 			try {

@@ -26,4 +26,7 @@ public interface InstrumentConfigTypes {
 	
 	/** Instrument config type represented two-slit spectrograph attributes. */
 	public static final int TWO_SLIT_SPECTROGRAPH = 6;
+	
+	/** Instrument config type representing the MOPTOP polarimeter. (Multi-colour optimised optical polarimeter). */
+	public static final int MOPTOP = 7;
 }
