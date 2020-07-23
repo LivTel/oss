@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="WEB-INF/src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/my-sql-connector"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ngat_oss_client"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tomcat_common"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/jibx-extras.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/jibx-run.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/jibx-soap.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/log4j-1.2.13.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_astrometry.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_new_oss.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_new_oss_client.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_new_phase2.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_new_tcm.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_sms.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_util.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/xpp3.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_net_cil.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_new_astrometry.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_net_telemetry.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_new_icm.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/jdom.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_util_logging.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/workspace/oss/WEB-INF/lib/ngat_eip.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_45"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/oss_client"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/phase2"/>
-	<classpathentry kind="output" path="WEB-INF/bin"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/jibx-extras.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/jibx-run.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/jibx-soap.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_astrometry.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_oss.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_oss_client.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_phase2.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_tcm.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_sms.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_util.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/xpp3.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_net_cil.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_astrometry.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_net_telemetry.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_icm.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_util_logging.jar"/>
+	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_eip.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
