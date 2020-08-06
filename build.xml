@@ -60,6 +60,10 @@
 		<echo message="copying ${deploy-dir}/ngat_new_oss_client.jar to ${lib-dir}"/>
 		<copy file="${deploy-dir}/ngat_new_oss_client.jar" todir="${lib-dir}" overwrite="true"/>
 
+		<!-- copy astrometry jar into lib directory of this application -->
+		<echo message="copying ${deploy-dir}/ngat_astrometry.jar to ${lib-dir}"/>
+		<copy file="${deploy-dir}/ngat_astrometry.jar" todir="${lib-dir}" overwrite="true"/>
+		
 		<!-- copy sms jar into lib directory of this application -->
 		<echo message="copying ${deploy-dir}/ngat_sms.jar to ${lib-dir}"/>
 		<copy file="${deploy-dir}/ngat_sms.jar" todir="${lib-dir}" overwrite="true"/>
