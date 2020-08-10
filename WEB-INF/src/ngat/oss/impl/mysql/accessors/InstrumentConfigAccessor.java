@@ -108,9 +108,7 @@ public class InstrumentConfigAccessor {
 			"?)";
 	
 	public static final String INSERT_INST_CONFIG_MOPTOP_SQL =						
-			"insert into INST_CONFIG_MOPTOP ("+
-			"dichroicState) values (" + 
-			"?)";
+			"insert into INST_CONFIG_MOPTOP (filterType, rotorSpeed) values (?, ?)";
 
 	public static final String INSERT_INST_CONFIG_IMAGING_SPECTROGRAPH_SQL =						
 		"insert into INST_CONFIG_SPEC_IMAGER (grismPos, grismRot, slitPos) values (?, ?, ?)";
@@ -148,7 +146,7 @@ public class InstrumentConfigAccessor {
 		"where id=?";
 	
 	public static final String GET_INST_CONFIG_MOPTOP_SQL = 
-			"select dichroicState " +
+			"select filterType, rotorSpeed " +
 			"from " +
 			"INST_CONFIG_MOPTOP " +
 			"where id=?";
@@ -676,6 +674,16 @@ public class InstrumentConfigAccessor {
 		}
 	}
 	
+	/**
+	 * Extract a MOPTOP instrument config from the phase2 SQL database.
+	 * @param connection The conenction to the database.
+	 * @param iConfigId The instrument config Id of the MOPTOP instrument config to extract.
+	 * @return An instance of a Moptop Instrument Config object (XMoptopInstrumentConfig), or null if there was
+	 * 	a problem.
+	 * @throws Exception Thrown if an error occurs.
+	 * @see ngat.phase2.XMoptopInstrumentConfig
+	 * @see #GET_INST_CONFIG_MOPTOP_SQL
+	 */
 	private XMoptopInstrumentConfig getMoptopInstrumentConfig(Connection connection, long iConfigId) throws Exception {
 		PreparedStatement stmt = null;
 		ResultSet resultSet = null;
@@ -690,10 +698,26 @@ public class InstrumentConfigAccessor {
 			}
 			
 			XMoptopInstrumentConfig moptopInstrumentConfig = null;
+			
 			if (resultSet.next()) {
-				int dichroicState = resultSet.getInt(1);
-				moptopInstrumentConfig = new XMoptopInstrumentConfig();
-				moptopInstrumentConfig.setDichroicState(dichroicState);
+				String filterString = resultSet.getString(1);
+				int rotorSpeed = resultSet.getInt(2);
+				
+				// Process filterString into a list of filters
+				XFilterSpec filterSpec = new XFilterSpec();
+				StringTokenizer st = new StringTokenizer(filterString, XFilterSpec.DELIMETER);
+			     while (st.hasMoreTokens()) {
+					 String filter = st.nextToken();
+					 filterSpec.addFilter(new XFilterDef(filter));
+			     }
+				// create new XMoptopInstrumentConfig and fill in it fields.
+				try {
+					moptopInstrumentConfig = new XMoptopInstrumentConfig();
+					moptopInstrumentConfig.setFilterSpec(filterSpec);
+					moptopInstrumentConfig.setRotorSpeed(rotorSpeed);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			return moptopInstrumentConfig;
 		} finally {
@@ -859,11 +883,21 @@ public class InstrumentConfigAccessor {
 		}
 	}
 	
+	/**
+	 * Insert an instance of XMoptopInstrumentConfig into the phase2 SQL database.
+	 * @param connection The connection to the database.
+	 * @param moptopInstrumentConfig The moptop instrument config to insert.
+	 * @return The method returns the id of the inserted record, if it succeeds.
+	 * @throws Exception If the insert fails an exception is thrown.
+	 * @see #XMoptopInstrumentConfig
+	 * @see #INSERT_INST_CONFIG_MOPTOP_SQL
+	 */
 	private long insertInstConfigMoptop(Connection connection, XMoptopInstrumentConfig moptopInstrumentConfig) throws Exception {
 		PreparedStatement stmt = null;
 		try {
 			stmt = connection.prepareStatement(INSERT_INST_CONFIG_MOPTOP_SQL, Statement.RETURN_GENERATED_KEYS);
-			stmt.setInt(1, moptopInstrumentConfig.getDichroicState());
+			stmt.setString(1, moptopInstrumentConfig.getFilterSpec().getFiltersString());
+			stmt.setInt(1, moptopInstrumentConfig.getRotorSpeed());
 			
 			//execute query
 			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_MOPTOP_SQL, true);
