@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS `INST_CONFIG_MOPTOP`;
 CREATE TABLE `INST_CONFIG_MOPTOP` (
   `id` int NOT NULL auto_increment,
   `filterType` varchar(128) default NULL,
-   rotorSpeed ` tinyint default NULL,
+  `rotorSpeed` tinyint default NULL,
   PRIMARY KEY  (`id`)) ENGINE = InnoDB;
 
 /*****************************/
