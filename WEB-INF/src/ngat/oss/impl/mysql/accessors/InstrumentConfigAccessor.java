@@ -897,7 +897,7 @@ public class InstrumentConfigAccessor {
 		try {
 			stmt = connection.prepareStatement(INSERT_INST_CONFIG_MOPTOP_SQL, Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, moptopInstrumentConfig.getFilterSpec().getFiltersString());
-			stmt.setInt(1, moptopInstrumentConfig.getRotorSpeed());
+			stmt.setInt(2, moptopInstrumentConfig.getRotorSpeed());
 			
 			//execute query
 			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_MOPTOP_SQL, true);
