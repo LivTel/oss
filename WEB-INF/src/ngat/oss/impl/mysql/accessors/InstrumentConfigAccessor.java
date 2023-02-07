@@ -25,6 +25,7 @@ import ngat.phase2.XMoptopInstrumentConfig;
 import ngat.phase2.XPolarimeterInstrumentConfig;
 import ngat.phase2.XImagingSpectrographInstrumentConfig;
 import ngat.phase2.XSpectrographInstrumentConfig;
+import ngat.phase2.XRaptorInstrumentConfig;
 import ngat.phase2.XTipTiltImagerInstrumentConfig;
 
 import org.apache.log4j.Logger;
@@ -120,6 +121,9 @@ public class InstrumentConfigAccessor {
 		"insert into INST_CONFIG_TIP_TILT ("+
 		"gain) values (" + 
 		"?)";
+
+	public static final String INSERT_INST_CONFIG_RAPTOR_SQL =						
+			"insert into INST_CONFIG_RAPTOR (filterType, nudgematicOffsetSize, coaddExposureLength) values (?, ?, ?)";
 	
 	public static final String GET_INST_CONFIG_CCD_SQL = 
 		"select filterType " +
@@ -163,6 +167,11 @@ public class InstrumentConfigAccessor {
 		"INST_CONFIG_TIP_TILT " +
 		"where id=?";
 
+	public static final String GET_INST_CONFIG_RAPTOR_SQL = 
+			"select filterType, nudgematicOffsetSize, coaddExposureLength " +
+			"from " +
+			"INST_CONFIG_RAPTOR " +
+			"where id=?";
 	
 	/** Public methods ******************************************************************
 	 * @throws Phase2Exception */ 
@@ -209,6 +218,10 @@ public class InstrumentConfigAccessor {
 				iConfigType = InstrumentConfigTypes.MOPTOP;
 				XMoptopInstrumentConfig moptopInstrumentConfig = (XMoptopInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigMoptop(connection, moptopInstrumentConfig); 
+			} else if (instConfig instanceof XRaptorInstrumentConfig) {
+				iConfigType = InstrumentConfigTypes.RAPTOR;
+				XRaptorInstrumentConfig raptorInstrumentConfig = (XRaptorInstrumentConfig)instConfig;
+				iConfigId = insertInstConfigRaptor(connection, raptorInstrumentConfig); 
 			} else {
 				throw new Phase2Exception("unknown instrument config type: " +(instConfig != null ? instConfig.getClass().getName() : "null") );
 			}
@@ -309,6 +322,10 @@ public class InstrumentConfigAccessor {
 				iConfigType = InstrumentConfigTypes.MOPTOP;
 				XMoptopInstrumentConfig moptopInstrumentConfig = (XMoptopInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigMoptop(connection, moptopInstrumentConfig);
+			} else if (instConfig instanceof XRaptorInstrumentConfig) {
+				iConfigType = InstrumentConfigTypes.RAPTOR;
+				XRaptorInstrumentConfig raptorInstrumentConfig = (XRaptorInstrumentConfig)instConfig;
+				iConfigId = insertInstConfigRaptor(connection, raptorInstrumentConfig);
 			} else {
 				throw new Phase2Exception("unknown instrument config type: " +(instConfig != null ? instConfig.getClass().getName() : "null") );
 			}
@@ -451,6 +468,12 @@ public class InstrumentConfigAccessor {
 				return null;
 			}
 			instrumentConfig = (XInstrumentConfig)moptopInstrumentConfig;
+		} else if (iConfigType == InstrumentConfigTypes.RAPTOR) {
+			XRaptorInstrumentConfig raptorInstrumentConfig = getRaptorInstrumentConfig(connection, iConfigId);
+			if (raptorInstrumentConfig == null) {
+				return null;
+			}
+			instrumentConfig = (XInstrumentConfig)raptorInstrumentConfig;
 	    } else if (iConfigType == InstrumentConfigTypes.TIP_TILT) {
 			XTipTiltImagerInstrumentConfig tipTiltImagerInstrumentConfig = getTipTiltImagerInstrumentConfig(connection, iConfigId);
 			if (tipTiltImagerInstrumentConfig == null) {
@@ -676,7 +699,7 @@ public class InstrumentConfigAccessor {
 	
 	/**
 	 * Extract a MOPTOP instrument config from the phase2 SQL database.
-	 * @param connection The conenction to the database.
+	 * @param connection The connection to the database.
 	 * @param iConfigId The instrument config Id of the MOPTOP instrument config to extract.
 	 * @return An instance of a Moptop Instrument Config object (XMoptopInstrumentConfig), or null if there was
 	 * 	a problem.
@@ -720,6 +743,75 @@ public class InstrumentConfigAccessor {
 				}
 			}
 			return moptopInstrumentConfig;
+		} finally {
+			try {
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close ResultSet");
+			}
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close PreparedStatement");
+			}
+		}
+	}
+
+	/**
+	 * Extract a RAPTOR instrument config from the phase2 SQL database.
+	 * @param connection The connection to the database.
+	 * @param iConfigId The instrument config Id of the RAPTOR instrument config to extract.
+	 * @return An instance of a Raptor Instrument Config object (XRaptorInstrumentConfig), or null if there was
+	 * 	a problem.
+	 * @throws Exception Thrown if an error occurs.
+	 * @see ngat.phase2.XRaptorInstrumentConfig
+	 * @see #GET_INST_CONFIG_RAPTOR_SQL
+	 */
+	private XRaptorInstrumentConfig getRaptorInstrumentConfig(Connection connection, long iConfigId) throws Exception {
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try 
+		{
+			stmt = connection.prepareStatement(GET_INST_CONFIG_RAPTOR_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt.setLong(1, iConfigId);
+			
+			resultSet = DatabaseTransactor.getInstance().executeQueryStatement(stmt, GET_INST_CONFIG_RAPTOR_SQL);
+			
+			if (resultSet == null) 
+			{ 
+				return null; 
+			}
+			
+			XRaptorInstrumentConfig raptorInstrumentConfig = null;
+			
+			if (resultSet.next()) 
+			{
+				String filterString = resultSet.getString(1);
+				int nudgematicOffsetSize = resultSet.getInt(2);
+				int coaddExposureLength = resultSet.getInt(3);
+				
+				// Process filterString into a list of filters
+				XFilterSpec filterSpec = new XFilterSpec();
+				StringTokenizer st = new StringTokenizer(filterString, XFilterSpec.DELIMETER);
+			     while (st.hasMoreTokens()) {
+					 String filter = st.nextToken();
+					 filterSpec.addFilter(new XFilterDef(filter));
+			     }
+				// create new XRaptorInstrumentConfig and fill in it fields.
+				try {
+					raptorInstrumentConfig = new XRaptorInstrumentConfig();
+					raptorInstrumentConfig.setFilterSpec(filterSpec);
+					raptorInstrumentConfig.setNudgematicOffsetSize(nudgematicOffsetSize);
+					raptorInstrumentConfig.setCoaddExposureLength(coaddExposureLength);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return raptorInstrumentConfig;
 		} finally {
 			try {
 				if (resultSet != null) {
@@ -901,6 +993,37 @@ public class InstrumentConfigAccessor {
 			
 			//execute query
 			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_MOPTOP_SQL, true);
+			return id;
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				logger.error("failed to close PreparedStatement");
+			}
+		}
+	}
+	
+	/**
+	 * Insert an instance of XRaptorInstrumentConfig into the phase2 SQL database.
+	 * @param connection The connection to the database.
+	 * @param raptorInstrumentConfig The raptor instrument config to insert.
+	 * @return The method returns the id of the inserted record, if it succeeds.
+	 * @throws Exception If the insert fails an exception is thrown.
+	 * @see #XRaptorInstrumentConfig
+	 * @see #INSERT_INST_CONFIG_RAPTOR_SQL
+	 */
+	private long insertInstConfigRaptor(Connection connection, XRaptorInstrumentConfig raptorInstrumentConfig) throws Exception {
+		PreparedStatement stmt = null;
+		try {
+			stmt = connection.prepareStatement(INSERT_INST_CONFIG_RAPTOR_SQL, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, raptorInstrumentConfig.getFilterSpec().getFiltersString());
+			stmt.setInt(2, raptorInstrumentConfig.getNudgematicOffsetSize());
+			stmt.setInt(3, raptorInstrumentConfig.getCoaddExposureLength());
+			
+			//execute query
+			long id = DatabaseTransactor.getInstance().executeUpdateStatement(connection, stmt, INSERT_INST_CONFIG_RAPTOR_SQL, true);
 			return id;
 		} finally {
 			try {
