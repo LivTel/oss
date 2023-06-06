@@ -8,7 +8,7 @@
 /*********** START ***********/
 USE phase2odb;
 
-CREATE TABLE `INST_CONFIG_RAPTOR` (
+CREATE TABLE `INST_CONFIG_LIRIC` (
   `id` int NOT NULL auto_increment,
   `filterType` varchar(128) default NULL,
   `nudgematicOffsetSize` tinyint default NULL,

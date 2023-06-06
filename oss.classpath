@@ -16,12 +16,7 @@
 	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_sms.jar"/>
 	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_util.jar"/>
 	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/xpp3.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_net_cil.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_astrometry.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_net_telemetry.jar"/>
 	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_new_icm.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/jdom.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_util_logging.jar"/>
-	<classpathentry kind="lib" path="/home/cjm/eclipse-kepler-workspace/oss/WEB-INF/lib/ngat_eip.jar"/>
+	<classpathentry kind="lib" path="/home/dev/bin/javalib_third_party/tomcat_lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
