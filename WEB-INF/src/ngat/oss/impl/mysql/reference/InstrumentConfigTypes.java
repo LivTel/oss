@@ -29,4 +29,7 @@ public interface InstrumentConfigTypes {
 	
 	/** Instrument config type representing the MOPTOP polarimeter. (Multi-colour optimised optical polarimeter). */
 	public static final int MOPTOP = 7;
+	
+	/** Instrument config type representing the LIRIC infra-red imager. */
+	public static final int LIRIC = 8;
 }
