@@ -187,42 +187,61 @@ public class InstrumentConfigAccessor {
 			int iConfigType;
 			long iConfigId;
 			
-			if (instConfig instanceof XImagerInstrumentConfig) {
+			if (instConfig instanceof XImagerInstrumentConfig)
+			{
 				//sub type of XImagerInstrumentConfig
-				if (instConfig instanceof XTipTiltImagerInstrumentConfig) {
+				if (instConfig instanceof XTipTiltImagerInstrumentConfig)
+				{
 					iConfigType = InstrumentConfigTypes.TIP_TILT;
 					XTipTiltImagerInstrumentConfig tiptiltInstrumentConfig = (XTipTiltImagerInstrumentConfig)instConfig;
 					iConfigId = insertInstConfigTipTilt(connection, tiptiltInstrumentConfig);
-				} else {
+				}
+				// Liric is a sub-class of XImagerInstrumentConfig
+				else if (instConfig instanceof XLiricInstrumentConfig)
+				{
+					iConfigType = InstrumentConfigTypes.LIRIC;
+					XLiricInstrumentConfig liricInstrumentConfig = (XLiricInstrumentConfig)instConfig;
+					iConfigId = insertInstConfigLiric(connection, liricInstrumentConfig);
+				}
+				else
+				{
 					iConfigType = InstrumentConfigTypes.CCD;
 					XImagerInstrumentConfig imagerInstrumentConfig = (XImagerInstrumentConfig)instConfig;
 					iConfigId = insertInstConfigCCD(connection, imagerInstrumentConfig);
 				}
-			} else if (instConfig instanceof XImagingSpectrographInstrumentConfig) {
+			}
+			else if (instConfig instanceof XImagingSpectrographInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.IMAGING_SPECTROGRAPH;
 				XImagingSpectrographInstrumentConfig imagingSpectrographInstrumentConfig = (XImagingSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigImagingSpectrograph(connection, imagingSpectrographInstrumentConfig);
-			} else if (instConfig instanceof XBlueTwoSlitSpectrographInstrumentConfig) {
+			}
+			else if (instConfig instanceof XBlueTwoSlitSpectrographInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.TWO_SLIT_SPECTROGRAPH;
 				XBlueTwoSlitSpectrographInstrumentConfig imagingSpectrographInstrumentConfig = (XBlueTwoSlitSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigBlueTwoSlitSpectrograph(connection, imagingSpectrographInstrumentConfig);
-			} else if (instConfig instanceof XDualBeamSpectrographInstrumentConfig) {
+			}
+			else if (instConfig instanceof XDualBeamSpectrographInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.FRODO;
 				XDualBeamSpectrographInstrumentConfig dualBeamSpectrographInstrumentConfig = (XDualBeamSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigFrodo(connection, dualBeamSpectrographInstrumentConfig);
-			} else if (instConfig instanceof XPolarimeterInstrumentConfig) {
+			}
+			else if (instConfig instanceof XPolarimeterInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.POLAR;
 				XPolarimeterInstrumentConfig polarimeterInstrumentConfig = (XPolarimeterInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigPolar(connection, polarimeterInstrumentConfig); 
-			} else if (instConfig instanceof XMoptopInstrumentConfig) {
+			}
+			else if (instConfig instanceof XMoptopInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.MOPTOP;
 				XMoptopInstrumentConfig moptopInstrumentConfig = (XMoptopInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigMoptop(connection, moptopInstrumentConfig); 
-			} else if (instConfig instanceof XLiricInstrumentConfig) {
-				iConfigType = InstrumentConfigTypes.LIRIC;
-				XLiricInstrumentConfig liricInstrumentConfig = (XLiricInstrumentConfig)instConfig;
-				iConfigId = insertInstConfigLiric(connection, liricInstrumentConfig); 
-			} else {
+			}
+			else
+			{
 				throw new Phase2Exception("unknown instrument config type: " +(instConfig != null ? instConfig.getClass().getName() : "null") );
 			}
 			
@@ -291,42 +310,61 @@ public class InstrumentConfigAccessor {
 			int iConfigType;
 			long iConfigId;
 			
-			if (instConfig instanceof XImagerInstrumentConfig) {
+			if (instConfig instanceof XImagerInstrumentConfig)
+			{
 				//sub type
-				if (instConfig instanceof XTipTiltImagerInstrumentConfig) {
+				if (instConfig instanceof XTipTiltImagerInstrumentConfig)
+				{
 					iConfigType = InstrumentConfigTypes.TIP_TILT;
 					XTipTiltImagerInstrumentConfig tipTiltImagerInstrumentConfig = (XTipTiltImagerInstrumentConfig)instConfig;
 					iConfigId = insertInstConfigTipTilt(connection, tipTiltImagerInstrumentConfig);
-				} else {
+				}
+				// XLiricInstrumentConfig is a sub-class of XImagerInstrumentConfig
+				else if (instConfig instanceof XLiricInstrumentConfig)
+				{
+					iConfigType = InstrumentConfigTypes.LIRIC;
+					XLiricInstrumentConfig liricInstrumentConfig = (XLiricInstrumentConfig)instConfig;
+					iConfigId = insertInstConfigLiric(connection, liricInstrumentConfig);
+				}
+				else
+				{
 					iConfigType = InstrumentConfigTypes.CCD;
 					XImagerInstrumentConfig imagerInstrumentConfig = (XImagerInstrumentConfig)instConfig;
 					iConfigId = insertInstConfigCCD(connection, imagerInstrumentConfig);
 				}
-			} else if (instConfig instanceof XImagingSpectrographInstrumentConfig) {
+			}
+			else if (instConfig instanceof XImagingSpectrographInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.IMAGING_SPECTROGRAPH;
 				XImagingSpectrographInstrumentConfig imagingSpectrographInstrumentConfig = (XImagingSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigImagingSpectrograph(connection, imagingSpectrographInstrumentConfig);
-			} else if (instConfig instanceof XBlueTwoSlitSpectrographInstrumentConfig) {
+			}
+			else if (instConfig instanceof XBlueTwoSlitSpectrographInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.TWO_SLIT_SPECTROGRAPH;
 				XBlueTwoSlitSpectrographInstrumentConfig blueTwoSlitSpectrographInstrumentConfig = (XBlueTwoSlitSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigBlueTwoSlitSpectrograph(connection, blueTwoSlitSpectrographInstrumentConfig);
-			} else if (instConfig instanceof XDualBeamSpectrographInstrumentConfig) {
+			}
+			else if (instConfig instanceof XDualBeamSpectrographInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.FRODO;
 				XDualBeamSpectrographInstrumentConfig dualBeamSpectrographInstrumentConfig = (XDualBeamSpectrographInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigFrodo(connection, dualBeamSpectrographInstrumentConfig);
-			} else if (instConfig instanceof XPolarimeterInstrumentConfig) {
+			}
+			else if (instConfig instanceof XPolarimeterInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.POLAR;
 				XPolarimeterInstrumentConfig polarimeterInstrumentConfig = (XPolarimeterInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigPolar(connection, polarimeterInstrumentConfig);
-			} else if (instConfig instanceof XMoptopInstrumentConfig) {
+			}
+			else if (instConfig instanceof XMoptopInstrumentConfig)
+			{
 				iConfigType = InstrumentConfigTypes.MOPTOP;
 				XMoptopInstrumentConfig moptopInstrumentConfig = (XMoptopInstrumentConfig)instConfig;
 				iConfigId = insertInstConfigMoptop(connection, moptopInstrumentConfig);
-			} else if (instConfig instanceof XLiricInstrumentConfig) {
-				iConfigType = InstrumentConfigTypes.LIRIC;
-				XLiricInstrumentConfig liricInstrumentConfig = (XLiricInstrumentConfig)instConfig;
-				iConfigId = insertInstConfigLiric(connection, liricInstrumentConfig);
-			} else {
+			}
+			else
+			{
 				throw new Phase2Exception("unknown instrument config type: " +(instConfig != null ? instConfig.getClass().getName() : "null") );
 			}
 			
@@ -474,7 +512,7 @@ public class InstrumentConfigAccessor {
 				return null;
 			}
 			instrumentConfig = (XInstrumentConfig)liricInstrumentConfig;
-	    } else if (iConfigType == InstrumentConfigTypes.TIP_TILT) {
+		} else if (iConfigType == InstrumentConfigTypes.TIP_TILT) {
 			XTipTiltImagerInstrumentConfig tipTiltImagerInstrumentConfig = getTipTiltImagerInstrumentConfig(connection, iConfigId);
 			if (tipTiltImagerInstrumentConfig == null) {
 				return null;
