@@ -5,12 +5,12 @@
 	<description>"Oss Webservice Infrastructure"</description>
 
 	<!-- The directories -->
-	<property name="root-dir" value="/home/cjm/eclipse-kepler-workspace/oss" />
+	<property name="root-dir" value="/home/cjm/eclipse-workspace/oss" />
 	<property name="class-dir" value="${root-dir}/WEB-INF/bin" />
 	<property name="lib-dir" value="${root-dir}/WEB-INF/lib" />
 	<property name="deploy-dir" value="/home/dev/bin/javalib"/>
 	<property name="third-party-lib-dir" value="/home/dev/bin/javalib_third_party" />
-	<property name="ngat-oss-client-root" value="/home/cjm/eclipse-kepler-workspace/oss_client" />
+	<property name="ngat-oss-client-root" value="/home/cjm/eclipse-workspace/oss_client" />
 	<!-- new directory, in order for ant build to access the servlet-api jar -->
 <!-- Removed cjm 04/10/2017 as we don't have /usr/local/tomcat installed on ltobs9
 	<property name="catalina-home" value="/usr/local/tomcat/" />
@@ -42,7 +42,7 @@
 		<!-- build the sub project jars -->
 		<!-- build phase2 objects jar-->
 		<echo message="building sub project target ngat_new_phase2.jar"/>
-		<subant target="jar" buildpath="/home/cjm/eclipse-kepler-workspace/phase2/java/build.xml"/>
+		<subant target="jar" buildpath="/home/cjm/eclipse-workspace/phase2/java/build.xml"/>
 		
 		<!-- copy phase2 objects jar to lib dir of this application-->
 		<echo message="copying ${deploy-dir}/ngat_new_phase2.jar to ${lib-dir}"/>
@@ -54,7 +54,7 @@
 		
 		<!-- build oss client jar-->
 		<echo message="building sub project target ngat_new_oss_client.jar"/>
-		<subant target="jar" buildpath="/home/cjm/eclipse-kepler-workspace/oss_client/build.xml"/>
+		<subant target="jar" buildpath="/home/cjm/eclipse-workspace/oss_client/build.xml"/>
 		
 		<!-- copy oss client jar to lib dir of this application-->
 		<echo message="copying ${deploy-dir}/ngat_new_oss_client.jar to ${lib-dir}"/>
