@@ -6,7 +6,15 @@ Source code for the Observer Support System (OSS). This contains source code for
 
 The OSS web-service picks up the RMI objects by querying the rmiresistry, and then invokes methods within them. The underlying implementation of the models then create SQL calls to communicate with the underlying database.
 
- 
+
+## OSS webservice
+
+The OSS web-service is a tomcat web-service containder deployed on the proxy machine, that receives web-service calls from the Phase2UI and passses them onto the RMI models exposed by the ModelRMILauncher.
+
+It can be built from within eclipse using the 'war' target. This generates the file '''/home/dev/bin/javalib/ngat_new_oss.war''' , which is copied into tomcat's webapp directory (ltproxy:/usr/local/tomcat/webapps/) to deploy the web-services. The web-services exposed for defined in the [web.xml](WEB-INF/web.xml) file and associated XML files.
+
+An associated configuration file [osswebservice.properties](resources/config/osswebservice.properties.live) should be deployed to tomcats conf directory ltproxy:/usr/local/tomcat/conf/. This configures the RMI objectsname for each service and also what host the invoked RMI services live on. For the live system this is the oss machine in the TLAN, but for testing purposes a modified version of this configuration file can be deployed on another tomcat machine to invoke a test database rather than the real live one.
+
 ## ModelRMILauncher
 
 The ModelRMILauncher (ngat.oss.impl.mysql.ModelRMILauncher), that creates a series of Models that access the PhaseII database, and exposes their methods by registering them as RMI (Remote Method Invocation) objects in the rmi registry. This process sits on the oss machine (where the underlying PhaseII mysql database runs).
