@@ -13,12 +13,12 @@ The ModelRMILauncher (ngat.oss.impl.mysql.ModelRMILauncher), that creates a seri
 
 The access models are defined in the [model interface](WEB-INF/src/ngat/oss/model/) directory. The following access model interfaces exist:
 
-* IAccessModel  (IAccessModel.java)
-* IAccountModel (IAccountModel.java)
-* IHistoryModel (IHistoryModel.java)
-* ILockingModel (ILockingModel.java)
-* IPhase2Model  (IPhase2Model.java)
-* IStatusModel  (IStatusModel.java)
+* IAccessModel  (IAccessModel.java) Handles Users and their access permissions. Also how Users authenticate with the phase2 interface via the authenticate method.
+* IAccountModel (IAccountModel.java) Handles the allocation of time to Proposals/Semesters.
+* IHistoryModel (IHistoryModel.java) Handles history associated with the database (records of observations taken and observation failures).
+* ILockingModel (ILockingModel.java) Enables locking of groups (i.e. we can't modify a group when it is executing).
+* IPhase2Model  (IPhase2Model.java) This contains the methods for adding/modifying/deleting the programmes/proposals/groups/targets/instruments/constraints/observing sequences in the PhaseII database.
+* IStatusModel  (IStatusModel.java) This provides a status interface - this seems mainly to do with getting rotator offsets for the science instruments mounted on the telescope.
 
 The model's are implmented in the [model implementation](WEB-INF/src/ngat/oss/impl/mysql/model) directory.
 
