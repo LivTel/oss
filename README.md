@@ -17,7 +17,7 @@ An associated configuration file [osswebservice.properties](resources/config/oss
 
 ## ModelRMILauncher
 
-The ModelRMILauncher (ngat.oss.impl.mysql.ModelRMILauncher), that creates a series of Models that access the PhaseII database, and exposes their methods by registering them as RMI (Remote Method Invocation) objects in the rmi registry. This process sits on the oss machine (where the underlying PhaseII mysql database runs).
+The ModelRMILauncher ([ngat.oss.impl.mysql.ModelRMILauncher](WEB-INF/src/ngat/oss/impl/mysql/ModelRMILauncher.java)), that creates a series of Models that access the PhaseII database, and exposes their methods by registering them as RMI (Remote Method Invocation) objects in the rmi registry. This process sits on the oss machine (where the underlying PhaseII mysql database runs).
 
 The access models are defined in the [model interface](WEB-INF/src/ngat/oss/model/) directory. The following access model interfaces exist:
 
@@ -33,3 +33,34 @@ The model's are implmented in the [model implementation](WEB-INF/src/ngat/oss/im
 The implementation of those models makes calls to various accessors defined [here](WEB-INF/src/ngat/oss/impl/mysql/accessors)
 
 and those accessors make the actual SQL calls into the database.
+
+### ModelRMILauncher configuration
+
+The ModelRMILauncher configures both the access model RMI objects, and the phase2 database connection, via a singleton instance of [OssProperties](WEB-INF/src/ngat/oss/configuration/OssProperties.java). This reads the properties file (hardcoded in OssProperties.java to be /oss/oss/config/oss.properties). This has the following format (there is no master copy in this repository as it contains database usernames/passwords):
+
+```
+# This file exists as /oss/oss/config/oss.properties
+# on the machine running the oss rmi objects and database connections
+
+accessmodel.rmi.objectname=AccessModel
+proposalaccountmodel.rmi.objectname=ProposalAccountModel
+useraccountmodel.rmi.objectname=UserAccountModel
+tagaccountmodel.rmi.objectname=TagAccountModel
+historymodel.rmi.objectname=HistoryModel
+lockingmodel.rmi.objectname=LockingModel
+phase2model.rmi.objectname=Phase2Model
+
+accessmodel.rmi.port=1100
+proposalaccountmodel.rmi.port=1101
+useraccountmodel.rmi.port=1102
+tagaccountmodel.rmi.port=1103
+historymodel.rmi.port=1104
+lockingmodel.rmi.port=1105
+phase2model.rmi.port=1106
+
+database.host=oss
+database.db=phase2odb
+database.user=<username>
+database.password=<password>
+```
+
