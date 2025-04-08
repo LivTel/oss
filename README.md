@@ -32,7 +32,7 @@ The model's are implmented in the [model implementation](WEB-INF/src/ngat/oss/im
 
 The implementation of those models makes calls to various accessors defined [here](WEB-INF/src/ngat/oss/impl/mysql/accessors)
 
-and those accessors make the actual SQL calls into the database.
+and those accessors make the actual SQL calls into the database. This is done via a Connection retrieved from the [ConnectionPool](WEB-INF/src/ngat/oss/impl/mysql/ConnectionPool.java), the singleton constructor of which initialises the connections using a JDBS connector with the URL  "jdbc:mysql://"+host+"/"+database +"?user="+user+"&password="+password; , where '''host''' , '''database''' , '''user''' and '''password''' are initialised from the OssProperties instance (and therefore the /oss/oss/config/oss.properties config file).
 
 ### ModelRMILauncher configuration
 
