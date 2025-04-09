@@ -1,0 +1,18 @@
+# This file exists as /usr/local/tomcat/conf/osswebservice.properties
+# on the machine running the oss SOAP webservice within the tomcat container
+
+accessmodel.rmi.objectname=AccessModel
+proposalaccountmodel.rmi.objectname=ProposalAccountModel
+useraccountmodel.rmi.objectname=UserAccountModel
+tagaccountmodel.rmi.objectname=TagAccountModel
+historymodel.rmi.objectname=HistoryModel
+lockingmodel.rmi.objectname=LockingModel
+phase2model.rmi.objectname=Phase2Model
+
+accessmodel.rmi.hostname=ltdevx64
+proposalaccountmodel.rmi.hostname=ltdevx64
+useraccountmodel.rmi.hostname=ltdevx64
+tagaccountmodel.rmi.hostname=ltdevx64
+historymodel.rmi.hostname=ltdevx64
+lockingmodel.rmi.hostname=ltdevx64
+phase2model.rmi.hostname=ltdevx64
