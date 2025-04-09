@@ -1,0 +1,3 @@
+# These files are temporarily put into this directory when running the docker build.
+osswebservice.properties.docker
+ngat_new_oss.war
