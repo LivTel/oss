@@ -33,8 +33,6 @@ You can test the tomcat webapp is running, and can talk to the database, by tryi
 
 Not quite sure how much this loads the webapp though - use with care!
 
-#### Editing the config file
-
 #### Reading the tomcat logs
 
 * **docker ps**
@@ -51,3 +49,18 @@ Alternatively, get a shell login into the container:
 * **cd /usr/local/tomcat/logs/**
 
 To see the localhost and localhost_access_log s.
+
+### ModelRMILauncher docker
+
+#### Building
+
+
+* **cd /home/cjm/eclipse-workspace/oss/images** (i.e. this directory)
+* **docker build -f model_rmi_launcher -t model_rmi_launcher_image .** Build the docker container from the **model_rmi_launcher** file.
+* **docker save -o model_rmi_launcher_image.tar model_rmi_launcher_image** Save the constructed docker container into the **model_rmi_launcher_image.tar** tarball.
+
+#### Running
+
+To run the docker image try:
+Lots of RMI ports here
+* **docker run -itd -p 1100:1100 -p 1101:1101 -p 1102:1102 -p 1103:1103 -p 1104:1104 -p 1105:1105 --name model-rmi-launcher model_rmi_launcher_image**
