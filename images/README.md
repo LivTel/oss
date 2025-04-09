@@ -13,3 +13,9 @@ To build a OSS web service docker container do the following (where the oss soft
 * **sudo docker build -f oss_web_service -t oss_web_service_image .** Build the docker container from the **oss_web_service** file.
 * **docker save -o oss_web_service_image.tar oss_web_service_image** Save the constructed docker container into the **oss_web_service_image.tar** tarball.
 
+The docker can then be installed / loaded into the target system as follows:
+* **sudo docker load -i oss_web_service_image.tar**
+
+To run the docker image try:
+* **docker run -itd -p 8080:8080 --name oss-web-service oss_web_service_image**
+
