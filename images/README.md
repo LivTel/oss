@@ -29,7 +29,7 @@ To run the docker image try:
 
 You can test the tomcat webapp is running, and can talk to the database, by trying the following test code URL in your browser:
 
-* **http://<host>:8080/ngat_new_oss/ListAllGroups.jsp**
+* **http://&lt;host&gt;:8080/ngat_new_oss/ListAllGroups.jsp**
 
 Not quite sure how much this loads the webapp though - use with care!
 
@@ -41,13 +41,13 @@ Not quite sure how much this loads the webapp though - use with care!
 
 Find the **oss-web-service** container id and then do the following:
 
-* **docker logs <container id>**
+* **docker logs &lt;container id&gt;**
 
 With the tomcat container, **catalina.out** is dumped to stdout (and therefore docker logs).
 
 Alternatively, get a shell login into the container:
 
-* **docker exec -it <container id> /bin/bash**
+* **docker exec -it &lt;container id&gt; /bin/bash**
 * **cd /usr/local/tomcat/logs/**
 
 To see the localhost and localhost_access_log s.
