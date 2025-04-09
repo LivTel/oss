@@ -64,3 +64,15 @@ database.user=<username>
 database.password=<password>
 ```
 
+## Deployment
+
+## OSS webservice Deployment
+
+The OSS web-service is usually deployed to the tomcat web-service container on ltproxy, by copying /home/dev/bin/javalib/ngat_new_oss.war to ltproxy and copying it to /usr/local/tomcat/webapps/ (tomcat should then automatically install it). When first deploying the web-service a osswebservice.properties has to be installed  as ltproxy:/usr/local/tomcat/conf/osswebservice.properties, which contains the model RMI object names and the location of the host that is hosting the models (with ModelRMILauncher). The currently installed version is maintained here: [osswebservice.properties](resources/config/osswebservice.properties.live) .
+
+As part of trying to move the currently installed system to a newer architecture, and also to facilitate NRT SODC integration testing, we are developing a docker container image of the OSS webservice. See the [image](image) directory for details.
+
+## ModelRMILauncher Deployment
+
+TBD
+

@@ -1,0 +1,15 @@
+# https://hub.docker.com/_/tomcat
+FROM tomcat
+# oss webservice configuration file
+COPY ./osswebservice.properties.docker /usr/local/tomcat/conf/osswebservice.properties
+# Copy war into tomcat
+COPY ./ngat_new_oss.war /usr/local/tomcat/webapps/
+#
+# EXPOSE ports
+#
+EXPOSE 8080
+# install emacs and bash so we can edit the container config file if necessary
+RUN apt-get update -y
+RUN apt-get install -y bash
+RUN apt-get install -y emacs
+
