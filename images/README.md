@@ -56,6 +56,40 @@ To see the localhost and localhost_access_log s.
 
 
 * **cd /home/cjm/eclipse-workspace/oss/images** (i.e. this directory)
+* **cp /home/dev/bin/javalib/ngat_astrometry.jar .** Copy the latest build of the ngat astrometry jar (used by ngat.phase2) into this directory.
+* **cp /home/dev/bin/javalib/ngat_new_oss.jar .** Copy the latest build of the oss jar into this directory.
+* **cp /home/dev/bin/javalib/ngat_new_icm.jar .** Copy the latest build of the icm (instrument capabilities and monitoring) jar into this directory.
+* **cp /home/dev/bin/javalib/ngat_new_phase2.jar .** Copy the latest build of the oss jar into this directory.
+* **cp /home/dev/bin/javalib/ngat_new_tcm.jar .** Copy the latest build of the tcm (telescope capabilities and monitoring) jar into this directory.
+* **cp /home/dev/bin/javalib/ngat_util.jar .** Copy the latest build of the ngat util jar into this directory.
+* **cp /home/dev/bin/javalib_third_party/log4j-1.2.13.jar .** Copy the latest build of the oss jar into this directory.
+* Create a config file **oss.properties.docker** in the **/home/cjm/eclipse-workspace/oss/images** directory containing the following:
+```
+# This file exists as /oss/oss/config/oss.properties
+# on the machine running the oss rmi objects and database connections
+
+accessmodel.rmi.objectname=AccessModel
+proposalaccountmodel.rmi.objectname=ProposalAccountModel
+useraccountmodel.rmi.objectname=UserAccountModel
+tagaccountmodel.rmi.objectname=TagAccountModel
+historymodel.rmi.objectname=HistoryModel
+lockingmodel.rmi.objectname=LockingModel
+phase2model.rmi.objectname=Phase2Model
+
+accessmodel.rmi.port=1100
+proposalaccountmodel.rmi.port=1101
+useraccountmodel.rmi.port=1102
+tagaccountmodel.rmi.port=1103
+historymodel.rmi.port=1104
+lockingmodel.rmi.port=1105
+phase2model.rmi.port=1106
+
+database.host=<hostname/ip address>
+database.db=phase2odb
+database.user=<username>
+database.password=<password>
+```
+* **cp /home/cjm/eclipse-workspace/oss/resources/security/policy.dat .** Copy the security policy config file into this directory.
 * **docker build -f model_rmi_launcher -t model_rmi_launcher_image .** Build the docker container from the **model_rmi_launcher** file.
 * **docker save -o model_rmi_launcher_image.tar model_rmi_launcher_image** Save the constructed docker container into the **model_rmi_launcher_image.tar** tarball.
 
