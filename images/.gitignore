@@ -10,3 +10,5 @@ ngat_util.jar
 log4j-1.2.13.jar
 oss.properties.docker
 policy.dat
+mysql-connector-java-3.1.12-bin.jar
+model_rmi_launcher_image.tar
