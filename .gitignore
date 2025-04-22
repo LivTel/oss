@@ -1,1 +1,4 @@
-/bin
+bin
+WEB-INF/bin
+WEB-INF/lib
+.classpath
