@@ -63,7 +63,7 @@ To see the localhost and localhost_access_log s.
 * **cp /home/dev/bin/javalib/ngat_new_tcm.jar .** Copy the latest build of the tcm (telescope capabilities and monitoring) jar into this directory.
 * **cp /home/dev/bin/javalib/ngat_util.jar .** Copy the latest build of the ngat util jar into this directory.
 * **cp /home/dev/bin/javalib_third_party/log4j-1.2.13.jar .** Copy the latest build of the oss jar into this directory.
-* **cp /home/dev/bin/javalib_third_party/mysql-connector-java-3.1.12-bin.jar .** Copy the mysql connector (suppl;ies the com.mysql.jdbc.Driver driver) into this directory.
+* **cp /home/dev/bin/javalib_third_party/mysql-connector-java-3.1.12-bin.jar .** Copy the mysql connector (supplies the com.mysql.jdbc.Driver driver) into this directory.
 * Create a config file **oss.properties.docker** in the **/home/cjm/eclipse-workspace/oss/images** directory containing the following:
 ```
 # This file exists as /oss/oss/config/oss.properties
