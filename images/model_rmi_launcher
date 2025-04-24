@@ -21,4 +21,5 @@ ENV CLASSPATH="ngat_new_oss.jar:ngat_astrometry.jar:ngat_new_icm.jar::ngat_new_p
 #$JAVA -DP2MODEL -Xmx2048m $IPV4 $POLICY $JRS ngat.oss.impl.mysql.ModelRMILauncher >>& $P2_CONSOLE_LOG_FILE  &
 # /usr/java/jdk1.5.0_17/bin/java -DP2MODEL -Xmx2048m -Djava.net.preferIPv4Stack=true -Djava.security.policy=/oss/tmp/policy.dat -Djava.rmi.server.hostname=oss.lt.com ngat.oss.impl.mysql.ModelRMILauncher
 # TODO Add $IPV4 $POLICY $JRS arguments
-ENTRYPOINT java -DP2MODEL -Xmx2048m -Djava.net.preferIPv4Stack=true -Djava.security.policy=/oss/tmp/policy.dat -Djava.rmi.server.hostname=oss.lt.com ngat.oss.impl.mysql.ModelRMILauncher
+# Expects $RMIREGISTRY_HOST to be passed into dockerfile as location (IP address) of rmiregistry
+ENTRYPOINT java -DP2MODEL -Xmx2048m -Djava.net.preferIPv4Stack=true -Djava.security.policy=/oss/tmp/policy.dat -Djava.rmi.server.hostname=$RMIREGISTRY_HOST ngat.oss.impl.mysql.ModelRMILauncher

@@ -7,6 +7,10 @@
 FROM tomcat:9.0
 # oss webservice configuration file
 COPY ./osswebservice.properties.docker /usr/local/tomcat/conf/osswebservice.properties
+# osswebservice.properties.docker should have rmi.hostname's defined as 'rmihostname'
+# docker-compose should pass in the rmiregistry hostname as $RMIREGISTRY_HOST
+# Therefore we need to add 'rmihostname $RMIREGISTRY_HOST' to /etc/hosts in this container for this to work
+# Or maybe not, try adding an alias to docker's internal DNS in the compose file
 # Copy war into tomcat
 COPY ./ngat_new_oss.war /usr/local/tomcat/webapps/
 # Try logging everything to console / stdout. Should then appear in docker logs

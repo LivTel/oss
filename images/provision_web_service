@@ -1,0 +1,5 @@
+#!/bin/tcsh
+set current_directory = `pwd`
+set oss_directory = `dirname ${current_directory}`
+cp ${oss_directory}/resources/config/osswebservice.properties.docker .
+cp /home/dev/bin/javalib/ngat_new_oss.war .
