@@ -6,6 +6,11 @@ services:
       dockerfile: rmiregistry-docker
     ports:
       - "1099:1099"
+    networks:
+      default:
+        aliases:
+          - rmiregistry
+          - rmihostname
 
   model-rmi-launcher:
     build:
