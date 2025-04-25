@@ -91,3 +91,15 @@ database.password=<password>
 To run the docker image try:
 Lots of RMI ports here
 * **docker run -itd -p 1100:1100 -p 1101:1101 -p 1102:1102 -p 1103:1103 -p 1104:1104 -p 1105:1105 --name model-rmi-launcher model_rmi_launcher_image**
+
+
+### Full system deployment
+
+We have not quite worked out how to deploy the ModelRMILauncher, oss webservice, and the rmiregistry (which the ModelRMILauncher exposes it's Phase2 Model to, and the OSS webservice invokes the model by looking up the ModelRMILauncher exposed services).
+
+There is a docker compose file **compose.yaml** that hopefully builds and deploys the 3 services, using the internal docker network to handle the RMI connections (whilst still exporting the webservice tomcat port, and the RMI registry port (for debugging purposes)). To run this, try:
+
+**docker compose up**
+
+Note this won't work for an LT deployment, where the OSS webservice needs to be on a DMZ machine, and the ModelRMILauncher on a TLAN machine.
+

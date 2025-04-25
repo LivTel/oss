@@ -1,26 +1,35 @@
 version: '3'
 services:
-    rmiregistry:
-      build: rmiregistry-docker
-      ports:
+  rmiregistry:
+    build:
+      context: .
+      dockerfile: rmiregistry-docker
+    ports:
       - "1099:1099"
-      networks:
-        default:
-          aliases:
-            - rmiregistry
-    model-rmi-launcher:
-      build: model_rmi_launcher
-      ports:
-      - "1100:1100" "1101:1101" "1102:1102" "1103:1103" "1104:1104" "1105:1105" 
-      depends_on:
-      - rmiregistry
-      environment: 
-          RMIREGISTRY_HOST: rmiregistry
-    oss-web-service:
-      build: oss_web_service
-      ports:
-      - "8080:8080"
-      depends_on:
-      - model_rmi_launcher
-      environment: 
-          RMIREGISTRY_HOST: rmiregistry
+
+  model-rmi-launcher:
+    build:
+      context: .
+      dockerfile: model_rmi_launcher
+    ports:
+    - "1100:1100"
+    - "1101:1101"
+    - "1102:1102"
+    - "1103:1103"
+    - "1104:1104"
+    - "1105:1105" 
+    depends_on:
+    - rmiregistry
+    environment: 
+      RMIREGISTRY_HOST: rmiregistry
+
+  oss-web-service:
+    build:
+      context: .
+      dockerfile: oss_web_service
+    ports:
+    - "8080:8080"
+    depends_on:
+    - model-rmi-launcher
+    environment: 
+      RMIREGISTRY_HOST: rmiregistry
