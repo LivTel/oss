@@ -83,7 +83,6 @@ database.db=phase2odb
 database.user=<username>
 database.password=<password>
 ```
-* **cp /home/cjm/eclipse-workspace/oss/resources/security/policy.dat .** Copy the security policy config file into this directory.
 * **docker build -f model_rmi_launcher -t model_rmi_launcher_image .** Build the docker container from the **model_rmi_launcher** file. Note this dockerfile now expects the $RMIREGISTRY_HOST environment variable to be defined to specify the host IP with the rmiregistry server running on it.
 * **docker save -o model_rmi_launcher_image.tar model_rmi_launcher_image** Save the constructed docker container into the **model_rmi_launcher_image.tar** tarball.
 
