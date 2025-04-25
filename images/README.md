@@ -10,8 +10,7 @@ This directory contains a Dockerfile for building an OSS web service docker cont
 To build a OSS web service docker container do the following (where the oss software repository is installed at /home/cjm/eclipse-workspace/oss) :
 
 * **cd /home/cjm/eclipse-workspace/oss/images** (i.e. this directory)
-* **cp /home/cjm/eclipse-workspace/oss/resources/config/osswebservice.properties.docker .** Copy the docker version of the osswebservice.properties file to this directory. You may want to edit the file to specify a different RMI end-point (the machine on which the ModelRMILauncher lives).
-* **cp /home/dev/bin/javalib/ngat_new_oss.war .** Copy the latest build of the oss web-service war into this directory.
+* **./provision_web_service** This copies the web service config file, and war file, into this directory for the docker build. You may want to edit the osswebservice.properties.docker file to specify a different RMI end-point (the machine on which the ModelRMILauncher lives).
 * **docker build -f oss_web_service -t oss_web_service_image .** Build the docker container from the **oss_web_service** file.
 * **docker save -o oss_web_service_image.tar oss_web_service_image** Save the constructed docker container into the **oss_web_service_image.tar** tarball.
 
@@ -56,14 +55,8 @@ To see the localhost and localhost_access_log s.
 
 
 * **cd /home/cjm/eclipse-workspace/oss/images** (i.e. this directory)
-* **cp /home/dev/bin/javalib/ngat_astrometry.jar .** Copy the latest build of the ngat astrometry jar (used by ngat.phase2) into this directory.
-* **cp /home/dev/bin/javalib/ngat_new_oss.jar .** Copy the latest build of the oss jar into this directory.
-* **cp /home/dev/bin/javalib/ngat_new_icm.jar .** Copy the latest build of the icm (instrument capabilities and monitoring) jar into this directory.
-* **cp /home/dev/bin/javalib/ngat_new_phase2.jar .** Copy the latest build of the oss jar into this directory.
-* **cp /home/dev/bin/javalib/ngat_new_tcm.jar .** Copy the latest build of the tcm (telescope capabilities and monitoring) jar into this directory.
-* **cp /home/dev/bin/javalib/ngat_util.jar .** Copy the latest build of the ngat util jar into this directory.
-* **cp /home/dev/bin/javalib_third_party/log4j-1.2.13.jar .** Copy the latest build of the oss jar into this directory.
-* **cp /home/dev/bin/javalib_third_party/mysql-connector-java-3.1.12-bin.jar .** Copy the mysql connector (supplies the com.mysql.jdbc.Driver driver) into this directory.
+* Edit the **provision_model_rmi_launcher** script, and the **model_rmi_launcher** docker file, and select the correct mysql-connector (which supplies the com.mysql.jdbc.Driver driver) for the mysql database you are trying to connect to.
+* **./provision_model_rmi_launcher** Copy the latest build of the relevant packages into this directory, for the docker build file to pick up.
 * Create a config file **oss.properties.docker** in the **/home/cjm/eclipse-workspace/oss/images** directory containing the following:
 ```
 # This file exists as /oss/oss/config/oss.properties
@@ -91,7 +84,7 @@ database.user=<username>
 database.password=<password>
 ```
 * **cp /home/cjm/eclipse-workspace/oss/resources/security/policy.dat .** Copy the security policy config file into this directory.
-* **docker build -f model_rmi_launcher -t model_rmi_launcher_image .** Build the docker container from the **model_rmi_launcher** file.
+* **docker build -f model_rmi_launcher -t model_rmi_launcher_image .** Build the docker container from the **model_rmi_launcher** file. Note this dockerfile now expects the $RMIREGISTRY_HOST environment variable to be defined to specify the host IP with the rmiregistry server running on it.
 * **docker save -o model_rmi_launcher_image.tar model_rmi_launcher_image** Save the constructed docker container into the **model_rmi_launcher_image.tar** tarball.
 
 #### Running

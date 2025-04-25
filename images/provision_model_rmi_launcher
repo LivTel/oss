@@ -8,5 +8,8 @@ cp /home/dev/bin/javalib/ngat_new_phase2.jar .
 cp /home/dev/bin/javalib/ngat_new_tcm.jar .
 cp /home/dev/bin/javalib/ngat_util.jar .
 cp /home/dev/bin/javalib_third_party/log4j-1.2.13.jar .
+# Currently used for the currently installed mysql (mysql-5.1.35-linux-i686-glibc23) on the oss machine 
 cp /home/dev/bin/javalib_third_party/mysql-connector-java-3.1.12-bin.jar .
-cp /home/cjm/eclipse-workspace/oss/resources/security/policy.dat .
+# Latest mysql connector from https://dev.mysql.com/downloads/connector/j/
+cp /home/dev/bin/javalib_third_party/mysql-connector-j-9.3.0.jar .
+cp ${oss_directory}/resources/security/policy.dat .
