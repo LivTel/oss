@@ -1,0 +1,27 @@
+# https://hub.docker.com/_/tomcat
+# Latest version of docker tomcat is tomcat 11.0
+# But this gives the following error for our application:
+# java.lang.NoClassDefFoundError: javax/servlet/ServletContextListener
+# This is because tomcat 10 migrated from javax.servlet to jakarta.servlet package names.
+# Therefore we need a tomcat 9.x version of the docker container.
+FROM tomcat:9.0
+# oss webservice configuration file
+COPY ./osswebservice.properties.docker /usr/local/tomcat/conf/osswebservice.properties
+# osswebservice.properties.docker should have rmi.hostname's defined as 'rmihostname'
+# docker-compose should pass in the rmiregistry hostname as $RMIREGISTRY_HOST
+# Therefore we need to add 'rmihostname $RMIREGISTRY_HOST' to /etc/hosts in this container for this to work
+# Or maybe not, try adding an alias to docker's internal DNS in the compose file
+# Copy war into tomcat
+COPY ./ngat_new_oss.war /usr/local/tomcat/webapps/
+# Try logging everything to console / stdout. Should then appear in docker logs
+# https://stackoverflow.com/questions/48639816/tomcat-one-or-more-listeners-failed-to-start
+COPY ./logging.properties /usr/local/tomcat/lib/
+#
+# EXPOSE ports
+#
+EXPOSE 8080
+# install emacs and bash so we can edit the container config file if necessary
+RUN apt-get update -y
+RUN apt-get install -y bash
+#RUN apt-get install -y emacs
+
